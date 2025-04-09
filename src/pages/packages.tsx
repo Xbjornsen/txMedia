@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Header from "./header";
 import Footer from "./footer";
-import Link from "next/link";
 
 // Define the type for form data
 interface FormData {
