@@ -57,19 +57,3 @@ export default function Home() {
     </div>
   );
 }
-
-// Add this CSS in your global stylesheet (e.g., globals.css)
-const slideshowCSS = `
-  .slideshow {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-  .animate-slide {
-    animation: slideshow 15s infinite;
-  }
-  @keyframes slideshow {
-    0%, 33.33% { opacity: 1; }
-    33.34%, 100% { opacity: 0; }
-  }
-`;
