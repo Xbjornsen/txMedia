@@ -1,0 +1,22 @@
+<svg width="80" height="80" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <text
+              x="100"
+              y="110"
+              font-family="Times New Roman, serif"
+              font-size="80"
+              font-weight="bold"
+              fill="var(--secondary-alt)" // Use CSS variable
+              text-anchor="middle"
+              dominant-baseline="middle"
+            >
+              TX
+            </text>
+            <path
+              d="M 145,100 A 60,60 0 1,1 45,100"
+              fill="none"
+              stroke="var(--secondary-alt)" // Use CSS variable
+              stroke-width="4"
+              stroke-linecap="round"
+              transform="rotate(275, 100, 100)"
+            />
+          </svg>
