@@ -6,47 +6,47 @@ import Header from "./header";
 const portfolioItems = {
   "Aerial Visions": [
     {
-      src: "/drone1.jpg",
+      src: "/drone1.JPG",
       alt: "Business Aerial",
       desc: "Drone footage for business promotions",
     },
     {
-      src: "/drone2.jpg",
+      src: "/drone2.JPG",
       alt: "Construction - Aerial View",
       desc: "Aerial shots for social media and websites",
     },
     {
-      src: "/drone3.jpg",
+      src: "/drone3.JPG",
       alt: "Business Aerial",
       desc: "Hi resolution aerial images",
     },
   ],
   "Wedding Photography": [
     {
-      src: "/wedding1.jpg",
+      src: "/wedding1.JPG",
       alt: "Wedding Ceremony",
       desc: "Capturing your special day in timeless images",
     },
     {
-      src: "/wedding2.jpg",
+      src: "/wedding2.JPG",
       alt: "Bride & Groom Portrait",
       desc: "Beautiful moments preserved forever",
     },
     {
-      src: "/wedding3.jpg",
+      src: "/wedding3.JPG",
       alt: "Bride & Groom Portrait",
       desc: "Capturing the moments",
     },
   ],
   "Baby Photography": [
-    { src: "/baby3.jpg", alt: "Baby", desc: "New Born moments" },
+    { src: "/baby3.JPG", alt: "Baby", desc: "New Born moments" },
     {
       src: "/baby1.jpg",
       alt: "Studio Session",
       desc: "Cherished early memories in soft, sweet photos",
     },
     {
-      src: "/baby2.jpg",
+      src: "/baby2.JPG",
       alt: "Contemporay",
       desc: "Documenting your little one’s growth",
     },
@@ -63,7 +63,7 @@ const portfolioItems = {
       desc: "Wildlife shots ready for printing",
     },
     {
-      src: "/nature3.jpg",
+      src: "/nature3.JPG",
       alt: "Contemporay",
       desc: "Macro shots ready for printing",
     },
