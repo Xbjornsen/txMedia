@@ -4,7 +4,7 @@ import Footer from "./footer";
 import Header from "./header";
 
 export default function Home() {
-  const slideshowImages = ["/drone1.jpg", "/wedding1.jpg", "/baby1.jpg"];
+  const slideshowImages = ["/drone1.JPG", "/wedding1.JPG", "/baby1.jpg"];
 
   return (
     <div className="flex flex-col min-h-screen bg-[var(--background)]">
