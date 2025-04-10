@@ -8,7 +8,10 @@ export default function Header() {
   return (
     <header className="bg-[var(--background)] border-b border-[var(--secondary)]/20 sticky top-0 z-50">
       <nav className="max-w-7xl mx-auto px-4 flex justify-between items-center py-2">
-        <Link href="/" className="text-xl sm:text-2xl font-bold aerial-text">
+        <Link
+          href="/"
+          className="flex items-center space-x-2 text-xl sm:text-2xl font-bold aerial-text"
+        >
           <svg
             width="100%"
             height="100%"
@@ -37,6 +40,9 @@ export default function Header() {
               transform="rotate(275, 100, 100)"
             />
           </svg>
+          <span className="text-[var(--secondary-alt)]text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
+            Media
+          </span>
         </Link>
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-6">
