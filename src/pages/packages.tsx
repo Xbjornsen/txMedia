@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./header";
 import Footer from "./footer";
+import emailjs from "emailjs-com";
 
 // Define the type for form data
 interface FormData {
@@ -16,10 +17,50 @@ interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
   packageTitle: string | null;
-  onSubmit: (formData: FormData) => void;
+  onSubmit: (formData: FormData) => Promise<void>;
 }
 
-// Modal Component with TypeScript types
+// Define the props type for SuccessModal
+interface SuccessModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+// Success Modal Component
+const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose }) => {
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        onClose(); // Auto-close after 3 seconds
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+      <div className="bg-[var(--background)] rounded-xl p-6 w-full max-w-sm mx-4 text-center">
+        <div className="text-green-500 text-4xl mb-4">✔</div>
+        <h2 className="text-xl font-bold text-[var(--foreground)] mb-2">
+          Email Sent Successfully!
+        </h2>
+        <p className="text-[var(--secondary)]">
+          Your booking request has been sent to TxMedia. We’ll respond to you as
+          soon as possible.
+        </p>
+        <button
+          onClick={onClose}
+          className="mt-4 px-4 py-2 bg-[var(--accent)] text-[var(--background)] rounded-lg hover:bg-opacity-80 transition-all duration-300"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const BookingModal: React.FC<BookingModalProps> = ({
   isOpen,
   onClose,
@@ -33,158 +74,199 @@ const BookingModal: React.FC<BookingModalProps> = ({
     request: "",
     bookingDate: "",
   });
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false); // Local success state
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit(formData);
-    onClose();
-    setFormData({
-      name: "",
-      phone: "",
-      email: "",
-      request: "",
-      bookingDate: "",
-    });
+    if (
+      !formData.name ||
+      !formData.phone ||
+      !formData.email ||
+      !formData.bookingDate
+    ) {
+      setError("Please fill out all required fields.");
+      return;
+    }
+    setIsLoading(true); // Start spinner only after valid submission
+    try {
+      await onSubmit(formData);
+      setIsSuccessOpen(true); // Show success modal on top
+      setFormData({
+        name: "",
+        phone: "",
+        email: "",
+        request: "",
+        bookingDate: "",
+      });
+    } catch (error) {
+      setIsLoading(false); // Reset spinner on error
+      setError(`Failed to send your request. Please try again. ${error}`);
+    }
   };
-  //   const handleFormSubmit = (formData) => {
-  //     const templateParams = {
-  //       package: selectedPackage,
-  //       name: formData.name,
-  //       phone: formData.phone,
-  //       email: formData.email,
-  //       request: formData.request,
-  //       bookingDate: formData.bookingDate,
-  //     };
 
-  //     emailjs
-  //       .send("your_service_id", "your_template_id", templateParams, "your_public_key")
-  //       .then((response) => {
-  //         console.log("Email sent successfully!", response.status, response.text);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Failed to send email:", error);
-  //       });
-
-  //     onClose();
-  //   };
+  const handleSuccessClose = () => {
+    setIsSuccessOpen(false);
+    setIsLoading(false); // Reset spinner
+    onClose(); // Close both modals
+  };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-[var(--background)] rounded-xl p-6 w-full max-w-md mx-4">
-        <h2 className="text-2xl font-bold text-[var(--foreground)] mb-4">
-          Book {packageTitle}
-        </h2>
-        {packageTitle === "Wedding Photography Package" && (
-          <p className="text-[var(--secondary)] mb-4">
-            We’d love to sit down and discuss your wedding photography needs in
-            detail. After submitting, we’ll reach out to schedule a meeting!
-          </p>
-        )}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-[var(--foreground)] text-sm mb-1">
-              Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-            />
-          </div>
-          <div>
-            <label className="block text-[var(--foreground)] text-sm mb-1">
-              Phone Number
-            </label>
-            <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-            />
-          </div>
-          <div>
-            <label className="block text-[var(--foreground)] text-sm mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-            />
-          </div>
-          <div>
-            <label className="block text-[var(--foreground)] text-sm mb-1">
-              Specific Requests
-            </label>
-            <textarea
-              name="request"
-              value={formData.request}
-              onChange={handleChange}
-              className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-              rows={3}
-            />
-          </div>
-          <div>
-            <label className="block text-[var(--foreground)] text-sm mb-1">
-              Desired Booking Date
-            </label>
-            <input
-              type="date"
-              name="bookingDate"
-              value={formData.bookingDate}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-            />
-          </div>
-          <div className="flex justify-end gap-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 bg-[var(--secondary)] text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/80 transition-all duration-300"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-[var(--accent)] text-[var(--background)] rounded-lg hover:bg-opacity-80 transition-all duration-300"
-            >
-              Send
-            </button>
-          </div>
-        </form>
+    <>
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-40">
+        <div className="bg-[var(--background)] rounded-xl p-6 w-full max-w-md mx-4">
+          <h2 className="text-2xl font-bold text-[var(--foreground)] mb-4">
+            Book {packageTitle}
+          </h2>
+          {packageTitle === "Wedding Photography Package" && (
+            <p className="text-[var(--secondary)] mb-4">
+              We’d love to sit down and discuss your wedding photography needs
+              in detail. After submitting, we’ll reach out to schedule a
+              meeting!
+            </p>
+          )}
+          {error && <p className="text-red-500 mb-4">{error}</p>}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-[var(--foreground)] text-sm mb-1">
+                Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                disabled={isLoading}
+                className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50"
+              />
+            </div>
+            <div>
+              <label className="block text-[var(--foreground)] text-sm mb-1">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+                disabled={isLoading}
+                className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50"
+              />
+            </div>
+            <div>
+              <label className="block text-[var(--foreground)] text-sm mb-1">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                disabled={isLoading}
+                className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50"
+              />
+            </div>
+            <div>
+              <label className="block text-[var(--foreground)] text-sm mb-1">
+                Specific Requests
+              </label>
+              <textarea
+                name="request"
+                value={formData.request}
+                onChange={handleChange}
+                disabled={isLoading}
+                className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50"
+                rows={3}
+              />
+            </div>
+            <div>
+              <label className="block text-[var(--foreground)] text-sm mb-1">
+                Desired Booking Date
+              </label>
+              <input
+                type="date"
+                name="bookingDate"
+                value={formData.bookingDate}
+                onChange={handleChange}
+                required
+                disabled={isLoading}
+                className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50"
+              />
+            </div>
+            <div className="flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                disabled={isLoading}
+                className="px-4 py-2 bg-[var(--secondary)] text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/80 transition-all duration-300 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="px-4 py-2 bg-[var(--accent)] text-[var(--background)] rounded-lg hover:bg-opacity-80 transition-all duration-300 disabled:opacity-50"
+              >
+                {isLoading ? (
+                  <span className="flex items-center">
+                    <svg
+                      className="animate-spin h-5 w-5 mr-2 text-[var(--background)]"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z"
+                      ></path>
+                    </svg>
+                    Sending...
+                  </span>
+                ) : (
+                  "Send"
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+      <SuccessModal isOpen={isSuccessOpen} onClose={handleSuccessClose} />
+    </>
   );
 };
 
 export default function Packages() {
   const [weddingHours, setWeddingHours] = useState(4);
   const pricePerHour = 500;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
 
   const calculateWeddingPrice = (hours: number) => {
     return `$${hours * pricePerHour}`;
   };
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
 
   const openModal = (pkgTitle: string) => {
     setSelectedPackage(pkgTitle);
@@ -196,11 +278,31 @@ export default function Packages() {
     setSelectedPackage(null);
   };
 
-  const handleFormSubmit = (formData: FormData) => {
-    console.log("Booking Request:", {
+  const handleFormSubmit = async (formData: FormData) => {
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceId || !templateId || !publicKey) {
+      console.error("EmailJS env vars missing:", {
+        serviceId,
+        templateId,
+        publicKey,
+      });
+      throw new Error("Configuration error. Please contact support.");
+    }
+
+    const templateParams = {
       package: selectedPackage,
-      ...formData,
-    });
+      name: formData.name,
+      phone: formData.phone,
+      email: formData.email,
+      request: formData.request,
+      bookingDate: formData.bookingDate,
+      time: new Date().toLocaleString(),
+    };
+
+    await emailjs.send(serviceId, templateId, templateParams, publicKey);
   };
 
   const photoPackages = [
@@ -242,15 +344,11 @@ export default function Packages() {
   ];
 
   const increaseHours = () => {
-    if (weddingHours < 12) {
-      setWeddingHours(weddingHours + 1);
-    }
+    if (weddingHours < 8) setWeddingHours(weddingHours + 1);
   };
 
   const decreaseHours = () => {
-    if (weddingHours > 2) {
-      setWeddingHours(weddingHours - 1);
-    }
+    if (weddingHours > 2) setWeddingHours(weddingHours - 1);
   };
 
   return (
@@ -297,7 +395,7 @@ export default function Packages() {
                       </span>
                       <button
                         onClick={increaseHours}
-                        disabled={weddingHours >= 12}
+                        disabled={weddingHours >= 8}
                         className="px-3 py-1 bg-[var(--secondary)] text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
                       >
                         +

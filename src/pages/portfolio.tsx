@@ -21,7 +21,7 @@ const portfolioItems = {
       desc: "Hi resolution aerial images",
     },
   ],
-  "Wedding Photography": [
+  Weddings: [
     {
       src: "/wedding1.JPG",
       alt: "Wedding Ceremony",
@@ -38,7 +38,7 @@ const portfolioItems = {
       desc: "Capturing the moments",
     },
   ],
-  "Baby Photography": [
+  Portaits: [
     { src: "/baby3.JPG", alt: "Baby", desc: "New Born moments" },
     {
       src: "/baby1.jpg",
@@ -51,7 +51,7 @@ const portfolioItems = {
       desc: "Documenting your little one’s growth",
     },
   ],
-  "WallPrints Photography": [
+  "Wall Prints": [
     {
       src: "/nature1.jpg",
       alt: "Black Necked Stalk",
@@ -74,7 +74,7 @@ export default function Portfolio() {
   return (
     <div className="flex flex-col min-h-screen bg-[var(--background)]">
       <Header />
-      <main className="flex flex-col flex-grow px-4 py-12">
+      <main className="flex flex-col flex-grow px-4 ">
         <div className="section-container w-full max-w-7xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold text-[var(--foreground)] text-center mb-12 tracking-tight"></h1>
 
