@@ -4,18 +4,16 @@ import Footer from "./footer";
 import Header from "./header";
 
 export default function Home() {
-
-  const slideshowImages = [
-    "/drone1.jpg", 
-    "/wedding1.jpg", 
-    "/baby1.jpg", 
-  ];
+  const slideshowImages = ["/drone1.jpg", "/wedding1.jpg", "/baby1.jpg"];
 
   return (
     <div className="flex flex-col min-h-screen bg-[var(--background)]">
       <Head>
         <title>Tx Media - Photography, Videography & Drone Services</title>
-        <meta name="description" content="Tx Media by Xavier Thorbjornsen - Drone Photography, Wedding Photography, and Baby Photography in the NT." />
+        <meta
+          name="description"
+          content="Tx Media by Xavier Thorbjornsen - Drone Photography, Wedding Photography, and Baby Photography in the NT."
+        />
       </Head>
       <Header />
       {/* Main Content with Dynamic Background */}
@@ -43,7 +41,7 @@ export default function Home() {
             Tx Media
           </h1>
           <p className="mt-4 text-base sm:text-lg md:text-xl text-white drop-shadow-md">
-            Drone Media, Photography, Website Media & Videography 
+            Drone Media, Photography, Website Media & Videography
           </p>
           <Link
             href="/contact"

@@ -7,9 +7,15 @@ export default function Header() {
 
   return (
     <header className="bg-[var(--background)] border-b border-[var(--secondary)]/20 sticky top-0 z-50">
-      <nav className="section-container flex justify-between items-center py-2">
+      <nav className="max-w-7xl mx-auto px-4 flex justify-between items-center py-2">
         <Link href="/" className="text-xl sm:text-2xl font-bold aerial-text">
-        <svg width="80" height="80" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 200 200"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-10 h-10 md:w-20 md:h-20"
+          >
             <text
               x="100"
               y="110"
@@ -35,27 +41,42 @@ export default function Header() {
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-6">
           <li>
-            <Link href="/" className="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors">
+            <Link
+              href="/"
+              className="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+            >
               Home
             </Link>
           </li>
           <li>
-            <Link href="/portfolio" className="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors">
+            <Link
+              href="/portfolio"
+              className="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+            >
               Portfolio
             </Link>
           </li>
           <li>
-            <Link href="/packages" className="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors">
-                Packages
+            <Link
+              href="/packages"
+              className="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+            >
+              Packages
             </Link>
-            </li>
+          </li>
           <li>
-            <Link href="/about" className="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors">
+            <Link
+              href="/about"
+              className="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+            >
               About
             </Link>
           </li>
           <li>
-            <Link href="/contact" className="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors">
+            <Link
+              href="/contact"
+              className="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+            >
               Contact
             </Link>
           </li>
@@ -65,12 +86,19 @@ export default function Header() {
           className="md:hidden text-[var(--secondary-alt)] focus:outline-none"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
-              d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+              d={
+                isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"
+              }
             />
           </svg>
         </button>
@@ -78,45 +106,48 @@ export default function Header() {
       {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
         <ul className="md:hidden bg-[var(--background)] border-t border-[var(--secondary)]/20 text-center">
-            <li>
+          <li>
             <Link
-                href="/"
-                className="block py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+              href="/"
+              className="block py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
             >
-                Home
+              Home
             </Link>
-            </li>
-            <li>
+          </li>
+          <li>
             <Link
-                href="/portfolio"
-                className="block py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+              href="/portfolio"
+              className="block py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
             >
-                Portfolio
+              Portfolio
             </Link>
-            </li>
-            <li>
-            <Link href="/packages" className="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors">
-                Packages
-            </Link>
-            </li>
-            <li>
+          </li>
+          <li>
             <Link
-                href="/about"
-                className="block py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+              href="/packages"
+              className="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
             >
-                About
+              Packages
             </Link>
-            </li>
-            <li>
+          </li>
+          <li>
             <Link
-                href="/contact"
-                className="block py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+              href="/about"
+              className="block py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
             >
-                Contact
+              About
             </Link>
-            </li>
+          </li>
+          <li>
+            <Link
+              href="/contact"
+              className="block py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+            >
+              Contact
+            </Link>
+          </li>
         </ul>
-        )}
+      )}
     </header>
   );
 }
