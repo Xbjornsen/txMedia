@@ -110,7 +110,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
       });
     } catch (error) {
       setIsLoading(false); // Reset spinner on error
-      setError("Failed to send your request. Please try again.");
+      setError(`Failed to send your request. Please try again. ${error}`);
     }
   };
 
