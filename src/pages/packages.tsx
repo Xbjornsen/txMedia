@@ -20,7 +20,12 @@ interface BookingModalProps {
 }
 
 // Modal Component with TypeScript types
-const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, packageTitle, onSubmit }) => {
+const BookingModal: React.FC<BookingModalProps> = ({
+  isOpen,
+  onClose,
+  packageTitle,
+  onSubmit,
+}) => {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     phone: "",
@@ -29,7 +34,9 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, packageTit
     bookingDate: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -46,27 +53,27 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, packageTit
       bookingDate: "",
     });
   };
-//   const handleFormSubmit = (formData) => {
-//     const templateParams = {
-//       package: selectedPackage,
-//       name: formData.name,
-//       phone: formData.phone,
-//       email: formData.email,
-//       request: formData.request,
-//       bookingDate: formData.bookingDate,
-//     };
-  
-//     emailjs
-//       .send("your_service_id", "your_template_id", templateParams, "your_public_key")
-//       .then((response) => {
-//         console.log("Email sent successfully!", response.status, response.text);
-//       })
-//       .catch((error) => {
-//         console.error("Failed to send email:", error);
-//       });
-  
-//     onClose();
-//   };
+  //   const handleFormSubmit = (formData) => {
+  //     const templateParams = {
+  //       package: selectedPackage,
+  //       name: formData.name,
+  //       phone: formData.phone,
+  //       email: formData.email,
+  //       request: formData.request,
+  //       bookingDate: formData.bookingDate,
+  //     };
+
+  //     emailjs
+  //       .send("your_service_id", "your_template_id", templateParams, "your_public_key")
+  //       .then((response) => {
+  //         console.log("Email sent successfully!", response.status, response.text);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Failed to send email:", error);
+  //       });
+
+  //     onClose();
+  //   };
 
   if (!isOpen) return null;
 
@@ -78,7 +85,8 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, packageTit
         </h2>
         {packageTitle === "Wedding Photography Package" && (
           <p className="text-[var(--secondary)] mb-4">
-            We’d love to sit down and discuss your wedding photography needs in detail. After submitting, we’ll reach out to schedule a meeting!
+            We’d love to sit down and discuss your wedding photography needs in
+            detail. After submitting, we’ll reach out to schedule a meeting!
           </p>
         )}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -251,7 +259,8 @@ export default function Packages() {
       <main className="flex flex-col flex-grow px-4 py-8">
         <div className="section-container w-full max-w-7xl mx-auto">
           <p className="text-center text-[var(--secondary)] text-lg mb-10">
-            Explore Tx Media’s tailored packages for drone media, weddings, and baby photography. Contact us for custom options!
+            Explore Tx Media’s tailored packages for drone media, weddings, and
+            baby photography. Contact us for custom options!
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {photoPackages.map((pkg, index) => (
@@ -260,14 +269,17 @@ export default function Packages() {
                 className="bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-xl p-6 flex flex-col justify-between shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <div>
-                  <h2 className="text-2xl font-semibold text-[var(--accent)] mb-4">
+                  <h2 className="text-2xl font-semibold text-[var(--secondary-alt)] mb-4">
                     {pkg.title}
                   </h2>
-                  <p className="text-[var(--secondary)] mb-4">{pkg.description}</p>
+                  <p className="text-[var(--secondary)] mb-4">
+                    {pkg.description}
+                  </p>
                   <ul className="text-[var(--foreground)] text-sm space-y-2 mb-6">
                     {pkg.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-2">
-                        <span className="text-[var(--accent)]">•</span> {feature}
+                        <span className="text-[var(--secondary-alt)]">•</span>{" "}
+                        {feature}
                       </li>
                     ))}
                   </ul>

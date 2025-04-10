@@ -1,4 +1,3 @@
-
 @import "tailwindcss";
 /* tailwind.config.ts should include these custom colors */
 @tailwind base;
@@ -7,30 +6,41 @@
 
 /* Custom CSS Variables */
 :root {
-  --background: #1a2633; /* Deep slate blue - night sky */
-  --foreground: #e0e7ff; /* Soft off-white - crisp text */
-  --accent: #00d4ff; /* Neon cyan - drone tech pop */
-  --secondary: #4b5e77; /* Steel gray - grounded contrast */
-  --secondary-alt: #F28C38; /* Peach/orange - new secondary color */
+  --background: #1a2633;
+  --foreground: #e0e7ff;
+  --accent: #00d4ff;
+  --secondary: #7e91ad;
+  --secondary-alt: #f28c38;
   --gradient-start: #1a2633;
-  --gradient-end: #2d4059; /* Subtle sky gradient */
+  --gradient-end: #2d4059;
+  --neutral-light: #d1d5db; /* New: Light gray for text */
+  --warm-coral: #ff8787; /* New: Warm coral for accents */
+  --muted-teal: #4fd1c5; /* New: Muted teal for alternatives */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0f1a26; /* Darker slate for depth */
-    --foreground: #f1f5f9; /* Slightly brighter for contrast */
-    --accent: #00eaff; /* Brighter cyan in dark mode */
-    --secondary-alt: #F28C38; /* Keep the same in dark mode, or adjust if desired */
+    --background: #0f1a26;
+    --foreground: #f1f5f9;
+    --accent: #00eaff;
+    --secondary: #7e91ad;
+    --secondary-alt: #f28c38;
+    --neutral-light: #d1d5db;
+    --warm-coral: #ff8787;
+    --muted-teal: #4fd1c5;
   }
 }
 
 /* Base Styles */
 @layer base {
   body {
-    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    background: linear-gradient(
+      135deg,
+      var(--gradient-start),
+      var(--gradient-end)
+    );
     color: var(--foreground);
-    font-family: 'Inter', Arial, sans-serif; /* Modern, clean font */
+    font-family: "Inter", Arial, sans-serif;
     min-height: 100vh;
   }
 }
@@ -44,7 +54,7 @@
     @apply transition-all duration-300 hover:scale-105 hover:shadow-[0_0_15px_rgba(0,212,255,0.5)];
   }
   .section-container {
-    @apply max-w-7xl mx-auto px-4 py-12;
+    @apply max-w-7xl mx-auto px-4 py-6;
   }
 }
 
@@ -60,6 +70,12 @@
 }
 
 @keyframes slideshow {
-  0%, 33.33% { opacity: 1; }
-  33.34%, 100% { opacity: 0; }
+  0%,
+  33.33% {
+    opacity: 1;
+  }
+  33.34%,
+  100% {
+    opacity: 0;
+  }
 }

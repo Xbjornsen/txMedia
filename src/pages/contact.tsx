@@ -2,13 +2,15 @@ import Head from "next/head";
 import Footer from "./footer";
 import Header from "./header";
 
-
 export default function Contact() {
   return (
     <div className="flex flex-col min-h-screen bg-[var(--background)]">
       <Head>
         <title>Contact Tx Media</title>
-        <meta name="description" content="Get in touch with Tx Media for photography, videography, and drone media services in the NT." />
+        <meta
+          name="description"
+          content="Get in touch with Tx Media for photography, videography, and drone media services in the NT."
+        />
       </Head>
       <Header />
       <main
@@ -21,17 +23,19 @@ export default function Contact() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             {/* Left Side: Contact Information */}
             <div className="text-center lg:text-left bg-[var(--background)]/80 rounded-xl p-6">
-              <h1 className="text-4xl md:text-5xl font-bold text-[var(--foreground)] mb-8 tracking-tight">
+              <h1 className="text-4xl md:text-5xl font-bold text-[var(--neutral-light)] mb-8 tracking-tight">
                 Let’s Create Something Amazing
               </h1>
-              <p className="text-[var(--secondary)] text-lg mb-6">
-                Whether it’s updating Business website content, portrait photography, or drone media for your next project, Tx Media is here to help. Reach out today!
+              <p className="text-[var(--neutral-light)] text-lg mb-6">
+                Whether it’s updating Business website content, portrait
+                photography, or drone media for your next project, Tx Media is
+                here to help. Reach out today!
               </p>
               <div className="flex flex-col items-center lg:items-start gap-4">
                 {/* Email Link */}
                 <div className="flex items-center gap-2">
                   <svg
-                    className="w-6 h-6 text-[var(--secondary)]"
+                    className="w-6 h-6 text-[var(--neutral-light)]"
                     fill="none"
                     stroke="var(--secondary-alt)"
                     viewBox="0 0 24 24"
@@ -46,7 +50,7 @@ export default function Contact() {
                   </svg>
                   <a
                     href="mailto:txfotography@gmail.com"
-                    className="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors text-lg"
+                    className="text-[var(--neutral-light)] hover:text-[var(--accent)] transition-colors text-lg"
                   >
                     txfotography@gmail.com
                   </a>
@@ -83,13 +87,14 @@ export default function Contact() {
                     href="https://www.instagram.com/txmedia_nt"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors text-lg"
+                    className="text-[var(--neutral-light)] hover:text-[var(--accent)] transition-colors text-lg"
                   >
                     @txmedia_nt
                   </a>
                 </div>
-                <p className="text-[var(--secondary)] text-sm">
-                  Based in the Northern Territory • Available for bookings across Darwin
+                <p className="text-[var(--neutral-light)] text-sm">
+                  Based in the Northern Territory • Available for bookings
+                  across Darwin
                 </p>
               </div>
             </div>
