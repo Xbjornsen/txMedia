@@ -1,6 +1,4 @@
 import Image from "next/image";
-import Footer from "./footer";
-import Header from "./header";
 
 // Portfolio items organized by your specific categories
 const portfolioItems = {

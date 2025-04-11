@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import Header from "./header";
-import Footer from "./footer";
 import emailjs from "emailjs-com";
 
 // Define the type for form data
