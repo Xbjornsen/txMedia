@@ -129,7 +129,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
           <h2 className="text-2xl font-bold text-[var(--foreground)] mb-4">
             Book {packageTitle}
           </h2>
-          {packageTitle === "Wedding Photography Package" && (
+          {packageTitle === "Wedding Package" && (
             <p className="text-[var(--secondary)] mb-4">
               We’d love to sit down and discuss your wedding photography needs
               in detail. After submitting, we’ll reach out to schedule a
@@ -307,7 +307,7 @@ export default function Packages() {
 
   const photoPackages = [
     {
-      title: "Drone Media Package",
+      title: "Drone Media",
       description:
         "Perfect for businesses, real estate, or social media content. Includes aerial photography and short video clips captured with professional drones.",
       features: [
@@ -319,7 +319,7 @@ export default function Packages() {
       price: "$750",
     },
     {
-      title: "Wedding Photography Package",
+      title: "Wedding Phoography",
       description:
         "Capture your special day with stunning photos. Includes a mix of candid and posed shots. Adjust the hours below to fit your needs!",
       features: [
@@ -330,7 +330,7 @@ export default function Packages() {
       price: calculateWeddingPrice(weddingHours),
     },
     {
-      title: "Baby Photography Package",
+      title: "Portrait Photography",
       description:
         "Cherish those early moments with a gentle, professional session. Ideal for newborns or milestones.",
       features: [
@@ -352,74 +352,70 @@ export default function Packages() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[var(--background)]">
-      <Header />
-      <main className="flex flex-col flex-grow px-4 py-8">
-        <div className="section-container w-full max-w-7xl mx-auto">
-          <p className="text-center text-[var(--secondary)] text-lg mb-10">
-            Explore Tx Media’s tailored packages for drone media, weddings, and
-            baby photography. Contact us for custom options!
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {photoPackages.map((pkg, index) => (
-              <div
-                key={index}
-                className="bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-xl p-6 flex flex-col justify-between shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                <div>
-                  <h2 className="text-2xl font-semibold text-[var(--secondary-alt)] mb-4">
-                    {pkg.title}
-                  </h2>
-                  <p className="text-[var(--secondary)] mb-4">
-                    {pkg.description}
-                  </p>
-                  <ul className="text-[var(--foreground)] text-sm space-y-2 mb-6">
-                    {pkg.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <span className="text-[var(--secondary-alt)]">•</span>{" "}
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  {pkg.title === "Wedding Photography Package" && (
-                    <div className="flex items-center justify-center gap-3 mb-4">
-                      <button
-                        onClick={decreaseHours}
-                        disabled={weddingHours <= 2}
-                        className="px-3 py-1 bg-[var(--secondary)] text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-                      >
-                        -
-                      </button>
-                      <span className="text-[var(--foreground)] text-sm">
-                        {weddingHours} hours
-                      </span>
-                      <button
-                        onClick={increaseHours}
-                        disabled={weddingHours >= 8}
-                        className="px-3 py-1 bg-[var(--secondary)] text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-                      >
-                        +
-                      </button>
-                    </div>
-                  )}
-                </div>
-                <div className="text-center">
-                  <p className="text-[var(--foreground)] text-xl font-bold mb-4">
-                    {pkg.price}
-                  </p>
-                  <button
-                    onClick={() => openModal(pkg.title)}
-                    className="inline-block px-6 py-2 bg-[var(--accent)] text-[var(--background)] rounded-lg hover:bg-opacity-80 transition-all duration-300"
-                  >
-                    Book Now
-                  </button>
-                </div>
+    <div>
+      <div className="section-container w-full max-w-7xl mx-auto">
+        <p className="text-center text-[var(--secondary)] text-lg mb-10">
+          Tailored packages for drone media, weddings, and portait photography.
+          Contact us for custom options!
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {photoPackages.map((pkg, index) => (
+            <div
+              key={index}
+              className="bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-xl p-6 flex flex-col justify-between shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <div>
+                <h2 className="text-2xl font-semibold text-[var(--secondary-alt)] mb-4">
+                  {pkg.title}
+                </h2>
+                <p className="text-[var(--secondary)] mb-4">
+                  {pkg.description}
+                </p>
+                <ul className="text-[var(--foreground)] text-sm space-y-2 mb-6">
+                  {pkg.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <span className="text-[var(--secondary-alt)]">•</span>{" "}
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                {pkg.title === "Wedding Package" && (
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <button
+                      onClick={decreaseHours}
+                      disabled={weddingHours <= 2}
+                      className="px-3 py-1 bg-[var(--secondary)] text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                    >
+                      -
+                    </button>
+                    <span className="text-[var(--foreground)] text-sm">
+                      {weddingHours} hours
+                    </span>
+                    <button
+                      onClick={increaseHours}
+                      disabled={weddingHours >= 8}
+                      className="px-3 py-1 bg-[var(--secondary)] text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                    >
+                      +
+                    </button>
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
+              <div className="text-center">
+                <p className="text-[var(--foreground)] text-xl font-bold mb-4">
+                  {pkg.price}
+                </p>
+                <button
+                  onClick={() => openModal(pkg.title)}
+                  className="inline-block px-6 py-2 bg-[var(--accent)] text-[var(--background)] rounded-lg hover:bg-opacity-80 transition-all duration-300"
+                >
+                  Book Now
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
-      </main>
-      <Footer />
+      </div>
       <BookingModal
         isOpen={isModalOpen}
         onClose={closeModal}

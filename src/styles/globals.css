@@ -54,7 +54,7 @@
     @apply transition-all duration-300 hover:scale-105 hover:shadow-[0_0_15px_rgba(0,212,255,0.5)];
   }
   .section-container {
-    @apply max-w-7xl mx-auto px-4 py-6;
+    @apply max-w-7xl mx-auto px-4 py-8;
   }
 }
 

@@ -1,10 +1,8 @@
 import Head from "next/head";
-import Footer from "./footer";
-import Header from "./header";
 
 export default function Contact() {
   return (
-    <div className="flex flex-col min-h-screen bg-[var(--background)]">
+    <>
       <Head>
         <title>Contact Tx Media</title>
         <meta
@@ -12,16 +10,15 @@ export default function Contact() {
           content="Get in touch with Tx Media for photography, videography, and drone media services in the NT."
         />
       </Head>
-      <Header />
-      <main
-        className="flex flex-col flex-grow px-4 py-12 bg-cover bg-center relative"
+      <div
+        className="px-4 py-12 bg-cover bg-center relative"
         style={{ backgroundImage: "url('/contact.jpg')" }}
       >
         {/* Overlay for background image */}
         <div className="absolute inset-0 bg-black/20 z-0" />
         <div className="section-container w-full max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            {/* Left Side: Contact Information */}
+            {/* Contact Information */}
             <div className="text-center lg:text-left bg-[var(--background)]/80 rounded-xl p-6">
               <h1 className="text-4xl md:text-5xl font-bold text-[var(--neutral-light)] mb-8 tracking-tight">
                 Let’s Create Something Amazing
@@ -100,8 +97,7 @@ export default function Contact() {
             </div>
           </div>
         </div>
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </>
   );
 }
