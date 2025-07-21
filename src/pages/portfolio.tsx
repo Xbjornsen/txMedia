@@ -4,64 +4,64 @@ import Image from "next/image";
 const portfolioItems = {
   "Aerial Visions": [
     {
-      src: "/drone1.jpg",
+      src: "/dutches.jpg",
       alt: "Business Aerial",
       desc: "Drone footage for business promotions",
     },
     {
-      src: "/drone2.jpg",
+      src: "/construction.jpg",
       alt: "Construction - Aerial View",
       desc: "Aerial shots for social media and websites",
     },
     {
-      src: "/drone3.jpg",
+      src: "/business.jpg",
       alt: "Business Aerial",
       desc: "Hi resolution aerial images",
     },
   ],
   Weddings: [
     {
-      src: "/wedding1.jpg",
+      src: "/wedding_hill.jpg",
       alt: "Wedding Ceremony",
       desc: "Capturing your special day in timeless images",
     },
     {
-      src: "/wedding2.jpg",
+      src: "/brides.jpg",
       alt: "Bride & Groom Portrait",
       desc: "Beautiful moments preserved forever",
     },
     {
-      src: "/wedding3.jpg",
+      src: "/wedding_ring.jpg",
       alt: "Bride & Groom Portrait",
       desc: "Capturing the moments",
     },
   ],
   Portaits: [
-    { src: "/baby3.jpg", alt: "Baby", desc: "New Born moments" },
+    { src: "/infant.jpg", alt: "Baby", desc: "New Born moments" },
     {
-      src: "/baby1.jpg",
+      src: "/baby_portrait.jpg",
       alt: "Studio Session",
       desc: "Cherished early memories in soft, sweet photos",
     },
     {
-      src: "/baby2.jpg",
+      src: "/baby_farm.jpg",
       alt: "Contemporay",
       desc: "Documenting your little one’s growth",
     },
   ],
   "Wall Prints": [
     {
-      src: "/nature1.jpg",
+      src: "/black_necked_stalk.jpg",
       alt: "Black Necked Stalk",
       desc: "Wildlife shots ready for printing",
     },
     {
-      src: "/nature2.jpg",
+      src: "/crimson_finch.jpg",
       alt: "Crimson Finch",
       desc: "Wildlife shots ready for printing",
     },
     {
-      src: "/nature3.jpg",
+      src: "/suculant.jpg",
       alt: "Contemporay",
       desc: "Macro shots ready for printing",
     },
