@@ -1,13 +1,11 @@
 import Head from "next/head";
 import Link from "next/link";
-import Packages from "./packages"; // Reusing your Packages page as a component
+import Packages from "./packages";
 import About from "./about";
 import Contact from "./contact";
 import Portfolio from "./portfolio";
 
 export default function Home() {
-  const slideshowImages = ["/drone1.JPG", "/wedding1.JPG", "/baby1.jpg"];
-
   return (
     <div className="flex flex-col bg-[var(--background)]">
       <Head>
@@ -16,28 +14,26 @@ export default function Home() {
           name="description"
           content="Tx Media by Xavier Thorbjornsen - Drone Photography, Wedding Photography, and Baby Photography in the NT."
         />
+        <link rel="preload" href="/videos/hero-bg.mp4" as="video" />
       </Head>
 
-      {/* Mobile: Stacked Sections, Desktop: Home Only */}
       <main className="flex flex-col flex-grow">
-        {/* Home Section */}
         <section
           id="home"
           className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden"
         >
           <div className="absolute inset-0 z-0">
-            <div className="w-full h-full slideshow">
-              {slideshowImages.map((src, index) => (
-                <div
-                  key={index}
-                  className="absolute inset-0 bg-cover bg-center opacity-0 animate-slide"
-                  style={{
-                    backgroundImage: `url(${src})`,
-                    animationDelay: `${index * 5}s`,
-                  }}
-                />
-              ))}
-            </div>
+            <video
+              className="w-full h-full object-cover"
+              autoPlay
+              loop
+              muted
+              playsInline
+              poster="/fallback.jpg"
+            >
+              <source src="/videos/hero-bg.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
             <div className="absolute inset-0 bg-black/40" />
           </div>
           <div className="relative z-10 text-center section-container">
@@ -56,7 +52,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Mobile-Only Sections */}
         <section
           id="portfolio"
           className="md:hidden px-4 py-4 bg-[var(--background)]"
