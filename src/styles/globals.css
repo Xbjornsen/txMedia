@@ -69,13 +69,27 @@
   animation: slideshow 15s infinite;
 }
 
-@keyframes slideshow {
+@keyframes slide {
   0%,
-  33.33% {
+  20% {
     opacity: 1;
   }
-  33.34%,
+  25%,
   100% {
     opacity: 0;
+  }
+}
+
+video {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+@supports (-webkit-touch-callout: none) {
+  video {
+    object-fit: contain;
   }
 }

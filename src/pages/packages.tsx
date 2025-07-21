@@ -317,7 +317,7 @@ export default function Packages() {
       price: "$750",
     },
     {
-      title: "Wedding Phoography",
+      title: "Wedding Photography",
       description:
         "Capture your special day with stunning photos. Includes a mix of candid and posed shots. Adjust the hours below to fit your needs!",
       features: [
