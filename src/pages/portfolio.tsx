@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Head from "next/head";
 
 // Portfolio items organized by your specific categories
 const portfolioItems = {
@@ -36,7 +37,7 @@ const portfolioItems = {
       desc: "Capturing the moments",
     },
   ],
-  Portaits: [
+  Portraits: [
     { src: "/infant.jpg", alt: "Baby", desc: "New Born moments" },
     {
       src: "/baby_portrait.jpg",
@@ -70,8 +71,16 @@ const portfolioItems = {
 
 export default function Portfolio() {
   return (
-    <div className="section-container w-full max-w-7xl mx-auto">
-      <h1 className="text-4xl md:text-5xl font-bold text-[var(--foreground)] text-center mb-12 tracking-tight"></h1>
+    <>
+      <Head>
+        <title>Portfolio - Tx Media</title>
+        <meta
+          name="description"
+          content="Explore Tx Media's portfolio featuring aerial drone photography, wedding photography, portrait sessions, and wall prints in the Northern Territory."
+        />
+      </Head>
+      <div className="section-container w-full max-w-7xl mx-auto">
+      <h1 className="text-4xl md:text-5xl font-bold text-[var(--foreground)] text-center mb-12 tracking-tight">Our Portfolio</h1>
 
       {/* Category Sections */}
       {Object.entries(portfolioItems).map(([category, items], idx) => (
@@ -106,5 +115,6 @@ export default function Portfolio() {
         </section>
       ))}
     </div>
+    </>
   );
 }
