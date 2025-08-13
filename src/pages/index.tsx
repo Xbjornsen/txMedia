@@ -14,7 +14,7 @@ export default function Home() {
           name="description"
           content="Tx Media by Xavier Thorbjornsen - Drone Photography, Wedding Photography, and Baby Photography in the NT."
         />
-        <link rel="preload" href="/videos/hero-bg.mp4" as="video" />
+        <link rel="preload" href="/videos/hero-bg.jpg" as="image" />
       </Head>
 
       <main className="flex flex-col flex-grow">
@@ -22,18 +22,10 @@ export default function Home() {
           id="home"
           className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden"
         >
-          <div className="absolute inset-0 z-0">
-            <video
-              className="w-full h-full object-cover"
-              autoPlay
-              loop
-              muted
-              playsInline
-              poster="/fallback.jpg"
-            >
-              <source src="/videos/hero-bg.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+          <div 
+            className="absolute inset-0 z-0 bg-cover bg-center"
+            style={{ backgroundImage: "url('/videos/hero-bg.jpg')" }}
+          >
             <div className="absolute inset-0 bg-black/40" />
           </div>
           <div className="relative z-10 text-center section-container">

@@ -16,10 +16,10 @@ export default function Contact() {
       >
         {/* Overlay for background image */}
         <div className="absolute inset-0 bg-black/20 z-0" />
-        <div className="section-container w-full max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <div className="section-container w-full max-w-4xl mx-auto relative z-10">
+          <div className="flex justify-center">
             {/* Contact Information */}
-            <div className="text-center lg:text-left bg-[var(--background)]/80 rounded-xl p-6">
+            <div className="text-center bg-[var(--background)]/80 rounded-xl p-8 max-w-2xl w-full">
               <h1 className="text-4xl md:text-5xl font-bold text-[var(--neutral-light)] mb-8 tracking-tight">
                 Let’s Create Something Amazing
               </h1>
@@ -28,7 +28,7 @@ export default function Contact() {
                 photography, or drone media for your next project, Tx Media is
                 here to help. Reach out today!
               </p>
-              <div className="flex flex-col items-center lg:items-start gap-4">
+              <div className="flex flex-col items-center gap-4">
                 {/* Email Link */}
                 <div className="flex items-center gap-2">
                   <svg

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import emailjs from "emailjs-com";
+import Head from "next/head";
 
 // Define the type for form data
 interface FormData {
@@ -127,7 +128,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
           <h2 className="text-2xl font-bold text-[var(--foreground)] mb-4">
             Book {packageTitle}
           </h2>
-          {packageTitle === "Wedding Package" && (
+          {packageTitle === "Wedding Photography" && (
             <p className="text-[var(--secondary)] mb-4">
               We’d love to sit down and discuss your wedding photography needs
               in detail. After submitting, we’ll reach out to schedule a
@@ -350,10 +351,18 @@ export default function Packages() {
   };
 
   return (
-    <div>
+    <>
+      <Head>
+        <title>Photography Packages - Tx Media</title>
+        <meta
+          name="description"
+          content="Professional photography packages for drone media, weddings, and portraits. Custom pricing and flexible options available in the Northern Territory."
+        />
+      </Head>
+      <div>
       <div className="section-container w-full max-w-7xl mx-auto">
         <p className="text-center text-[var(--secondary)] text-lg mb-10">
-          Tailored packages for drone media, weddings, and portait photography.
+          Tailored packages for drone media, weddings, and portrait photography.
           Contact us for custom options!
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -377,7 +386,7 @@ export default function Packages() {
                     </li>
                   ))}
                 </ul>
-                {pkg.title === "Wedding Package" && (
+                {pkg.title === "Wedding Photography" && (
                   <div className="flex items-center justify-center gap-3 mb-4">
                     <button
                       onClick={decreaseHours}
@@ -421,5 +430,6 @@ export default function Packages() {
         onSubmit={handleFormSubmit}
       />
     </div>
+    </>
   );
 }

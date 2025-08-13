@@ -6,10 +6,6 @@ export default function Header() {
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
-  const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    setIsMenuOpen(false);
-  };
 
   return (
     <header className="bg-[var(--background)] border-b border-[var(--secondary)]/20 sticky top-0 z-50 shadow-md">
@@ -121,44 +117,49 @@ export default function Header() {
       {isMenuOpen && (
         <ul className="md:hidden bg-[var(--background)] border-t border-[var(--secondary)]/20 absolute left-0 right-0 top-full z-50 shadow-md">
           <li>
-            <button
-              onClick={() => scrollToSection("home")}
-              className="block w-full py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors text-left"
+            <Link
+              href="/"
+              onClick={() => setIsMenuOpen(false)}
+              className="block w-full py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors"
             >
               Home
-            </button>
+            </Link>
           </li>
           <li>
-            <button
-              onClick={() => scrollToSection("portfolio")}
-              className="block w-full py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors text-left"
+            <Link
+              href="/portfolio"
+              onClick={() => setIsMenuOpen(false)}
+              className="block w-full py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors"
             >
               Portfolio
-            </button>
+            </Link>
           </li>
           <li>
-            <button
-              onClick={() => scrollToSection("packages")}
-              className="block w-full py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors text-left"
+            <Link
+              href="/packages"
+              onClick={() => setIsMenuOpen(false)}
+              className="block w-full py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors"
             >
               Packages
-            </button>
+            </Link>
           </li>
           <li>
-            <button
-              onClick={() => scrollToSection("about")}
-              className="block w-full py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors text-left"
+            <Link
+              href="/about"
+              onClick={() => setIsMenuOpen(false)}
+              className="block w-full py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors"
             >
               About
-            </button>
+            </Link>
           </li>
           <li>
-            <button
-              onClick={() => scrollToSection("contact")}
-              className="block w-full py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors text-left"
+            <Link
+              href="/contact"
+              onClick={() => setIsMenuOpen(false)}
+              className="block w-full py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors"
             >
               Contact
-            </button>
+            </Link>
           </li>
         </ul>
       )}
