@@ -67,6 +67,24 @@ const portfolioItems: PortfolioItems = {
       type: "image",
     },
     {
+      src: "/wedding_couple_portrait.jpg",
+      alt: "Wedding Couple Portrait",
+      desc: "Intimate couple portrait capturing love and connection",
+      type: "image",
+    },
+    {
+      src: "/wedding_ceremony_outdoor.jpg", 
+      alt: "Outdoor Wedding Ceremony",
+      desc: "Beautiful outdoor ceremony in natural setting",
+      type: "image",
+    },
+    {
+      src: "/wedding_bride_dress.jpg",
+      alt: "Bride in Wedding Dress",
+      desc: "Elegant bridal portrait showcasing dress details",
+      type: "image",
+    },
+    {
       src: "/videos/wedding-highlight.mp4",
       alt: "Wedding Highlight Reel",
       desc: "Emotional wedding moments captured in cinematic style",
