@@ -119,19 +119,18 @@ export default function BookingCalendar({ isOpen, onClose, serviceType, onDateSe
 
   const handleDateSelect = (day: CalendarDay) => {
     if (!day.isAvailable) return;
-    
     setSelectedDate(day.date);
-    const dateString = day.date.toLocaleDateString('en-AU', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-    onDateSelect(dateString);
   };
 
   const handleConfirm = () => {
     if (selectedDate) {
+      const dateString = selectedDate.toLocaleDateString('en-AU', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      onDateSelect(dateString);
       onClose();
     }
   };
