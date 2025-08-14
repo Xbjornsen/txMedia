@@ -36,10 +36,10 @@ export default function PortfolioFilter({
       </div>
 
       {/* Category filter buttons */}
-      <div className="flex flex-wrap justify-center gap-2">
+      <div className="flex flex-wrap justify-center gap-2 px-2">
         <button
           onClick={() => onCategoryChange("All")}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+          className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 min-h-[44px] min-w-[44px] ${
             activeCategory === "All"
               ? "bg-[var(--accent)] text-[var(--background)]"
               : "bg-[var(--gradient-start)] text-[var(--foreground)] hover:bg-[var(--accent)]/20"
@@ -51,7 +51,7 @@ export default function PortfolioFilter({
           <button
             key={category}
             onClick={() => onCategoryChange(category)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+            className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 min-h-[44px] min-w-[44px] ${
               activeCategory === category
                 ? "bg-[var(--accent)] text-[var(--background)]"
                 : "bg-[var(--gradient-start)] text-[var(--foreground)] hover:bg-[var(--accent)]/20"

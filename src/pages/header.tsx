@@ -91,7 +91,7 @@ export default function Header() {
         </ul>
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-[var(--secondary-alt)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] rounded"
+          className="md:hidden text-[var(--secondary-alt)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] rounded p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
           onClick={toggleMenu}
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={isMenuOpen}
@@ -120,7 +120,7 @@ export default function Header() {
             <Link
               href="/"
               onClick={() => setIsMenuOpen(false)}
-              className="block w-full py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors"
+              className="block w-full py-3 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center"
             >
               Home
             </Link>
@@ -129,7 +129,7 @@ export default function Header() {
             <Link
               href="/portfolio"
               onClick={() => setIsMenuOpen(false)}
-              className="block w-full py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors"
+              className="block w-full py-3 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center"
             >
               Portfolio
             </Link>
@@ -138,7 +138,7 @@ export default function Header() {
             <Link
               href="/packages"
               onClick={() => setIsMenuOpen(false)}
-              className="block w-full py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors"
+              className="block w-full py-3 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center"
             >
               Packages
             </Link>
@@ -147,7 +147,7 @@ export default function Header() {
             <Link
               href="/about"
               onClick={() => setIsMenuOpen(false)}
-              className="block w-full py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors"
+              className="block w-full py-3 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center"
             >
               About
             </Link>
@@ -156,7 +156,7 @@ export default function Header() {
             <Link
               href="/contact"
               onClick={() => setIsMenuOpen(false)}
-              className="block w-full py-2 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors"
+              className="block w-full py-3 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center"
             >
               Contact
             </Link>

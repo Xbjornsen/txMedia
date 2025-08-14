@@ -37,7 +37,7 @@ export default function Home() {
             </p>
             <Link
               href="/contact"
-              className="mt-6 inline-block px-6 py-3 bg-[var(--accent)] text-[var(--background)] rounded-lg hover:bg-opacity-80 transition-all duration-300"
+              className="mt-6 inline-block px-8 py-4 bg-[var(--accent)] text-[var(--background)] rounded-lg hover:bg-opacity-80 transition-all duration-300 min-h-[44px] min-w-[120px] flex items-center justify-center text-lg font-medium"
             >
               Get in Touch
             </Link>

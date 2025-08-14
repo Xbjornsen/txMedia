@@ -30,7 +30,10 @@ export default function Contact() {
               </p>
               <div className="flex flex-col items-center gap-4">
                 {/* Email Link */}
-                <div className="flex items-center gap-2">
+                <a
+                  href="mailto:txfotography@gmail.com"
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-[var(--accent)]/10 transition-colors min-h-[44px]"
+                >
                   <svg
                     className="w-6 h-6 text-[var(--neutral-light)]"
                     fill="none"
@@ -45,15 +48,17 @@ export default function Contact() {
                       d="M3 8l9 6 9-6M3 8v8l9 6 9-6V8"
                     />
                   </svg>
-                  <a
-                    href="mailto:txfotography@gmail.com"
-                    className="text-[var(--neutral-light)] hover:text-[var(--accent)] transition-colors text-lg"
-                  >
+                  <span className="text-[var(--neutral-light)] hover:text-[var(--accent)] transition-colors text-lg">
                     txfotography@gmail.com
-                  </a>
-                </div>
+                  </span>
+                </a>
                 {/* Instagram Link */}
-                <div className="flex items-center gap-2">
+                <a
+                  href="https://www.instagram.com/txmedia_nt"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-[var(--accent)]/10 transition-colors min-h-[44px]"
+                >
                   <svg
                     className="w-6 h-6 text-[var(--secondary)]"
                     fill="none"
@@ -80,15 +85,10 @@ export default function Contact() {
                       d="M17 7h.01"
                     />
                   </svg>
-                  <a
-                    href="https://www.instagram.com/txmedia_nt"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[var(--neutral-light)] hover:text-[var(--accent)] transition-colors text-lg"
-                  >
+                  <span className="text-[var(--neutral-light)] hover:text-[var(--accent)] transition-colors text-lg">
                     @txmedia_nt
-                  </a>
-                </div>
+                  </span>
+                </a>
                 <p className="text-[var(--neutral-light)] text-sm">
                   Based in the Northern Territory • Available for bookings
                   across Darwin
