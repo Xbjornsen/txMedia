@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Head from "next/head";
 import { useState, useMemo } from "react";
+import emailjs from "emailjs-com";
 import ImageSkeleton from "../components/ImageSkeleton";
 import ImageModal from "../components/ImageModal";
 import VideoModal from "../components/VideoModal";
@@ -262,10 +263,38 @@ export default function Portfolio() {
     setSelectedService("");
   };
 
-  const handleDateSelect = (date: string) => {
-    console.log(`Booking ${selectedService} for ${date}`);
-    // In a real app, this would send the booking to an API
-    alert(`Booking request for ${selectedService} on ${date} has been submitted! We'll contact you soon.`);
+  const handleDateSelect = async (date: string) => {
+    try {
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+      if (!serviceId || !templateId || !publicKey) {
+        console.error("EmailJS env vars missing:", {
+          serviceId,
+          templateId,
+          publicKey,
+        });
+        alert("Configuration error. Please contact support.");
+        return;
+      }
+
+      const templateParams = {
+        package: selectedService,
+        name: "Portfolio Booking",
+        phone: "Not provided",
+        email: "txfotography@gmail.com",
+        request: `New booking inquiry for ${selectedService} service`,
+        bookingDate: date,
+        time: new Date().toLocaleString(),
+      };
+
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      alert(`Booking request for ${selectedService} on ${date} has been sent! We'll contact you soon.`);
+    } catch (error) {
+      console.error("Failed to send booking email:", error);
+      alert("Failed to send booking request. Please try contacting us directly.");
+    }
   };
 
   return (
