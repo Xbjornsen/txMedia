@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface ImageModalProps {
   isOpen: boolean;
@@ -11,6 +11,7 @@ interface ImageModalProps {
 }
 
 export default function ImageModal({ isOpen, onClose, src, alt, title, description }: ImageModalProps) {
+  const [isImageLoading, setIsImageLoading] = useState(true);
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -21,6 +22,7 @@ export default function ImageModal({ isOpen, onClose, src, alt, title, descripti
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
+      setIsImageLoading(true); // Reset loading state when modal opens
     }
 
     return () => {
@@ -28,6 +30,10 @@ export default function ImageModal({ isOpen, onClose, src, alt, title, descripti
       document.body.style.overflow = 'unset';
     };
   }, [isOpen, onClose]);
+
+  const handleImageLoad = () => {
+    setIsImageLoading(false);
+  };
 
   if (!isOpen) return null;
 
@@ -53,14 +59,27 @@ export default function ImageModal({ isOpen, onClose, src, alt, title, descripti
 
         {/* Image container */}
         <div className="relative w-full h-full flex items-center justify-center">
+          {/* Loading spinner */}
+          {isImageLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+                <p className="text-white text-sm">Loading full resolution...</p>
+              </div>
+            </div>
+          )}
+          
           <Image
             src={src}
             alt={alt}
             width={1920}
             height={1280}
-            className="object-contain max-w-full max-h-full"
+            className={`object-contain max-w-full max-h-full transition-opacity duration-300 ${
+              isImageLoading ? 'opacity-0' : 'opacity-100'
+            }`}
             sizes="100vw"
             priority
+            onLoad={handleImageLoad}
           />
         </div>
 
