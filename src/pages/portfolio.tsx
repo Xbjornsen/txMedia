@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Head from "next/head";
+import { useState } from "react";
+import ImageSkeleton from "../components/ImageSkeleton";
 
 // Portfolio items organized by your specific categories
 const portfolioItems = {
@@ -85,6 +87,16 @@ const portfolioItems = {
 };
 
 export default function Portfolio() {
+  const [loadingImages, setLoadingImages] = useState<{[key: string]: boolean}>({});
+
+  const handleImageLoad = (imageKey: string) => {
+    setLoadingImages(prev => ({ ...prev, [imageKey]: false }));
+  };
+
+  const handleImageLoadStart = (imageKey: string) => {
+    setLoadingImages(prev => ({ ...prev, [imageKey]: true }));
+  };
+
   return (
     <>
       <Head>
@@ -104,28 +116,43 @@ export default function Portfolio() {
             {category}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {items.map((item, index) => (
-              <div
-                key={index}
-                className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                <Image
-                  src={item.src}
-                  alt={item.alt}
-                  width={600}
-                  height={400}
-                  className="object-cover w-full h-64 md:h-80 transition-transform duration-500 group-hover:scale-105"
-                  placeholder="blur"
-                  blurDataURL="/placeholder.jpg"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                  <h3 className="text-[var(--accent)] text-lg font-semibold">
-                    {item.alt}
-                  </h3>
-                  <p className="text-[var(--secondary)] text-sm">{item.desc}</p>
+            {items.map((item, index) => {
+              const imageKey = `${category}-${index}`;
+              const isLoading = loadingImages[imageKey];
+              
+              return (
+                <div
+                  key={index}
+                  className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  {isLoading && (
+                    <div className="absolute inset-0 z-10">
+                      <ImageSkeleton />
+                    </div>
+                  )}
+                  <Image
+                    src={item.src}
+                    alt={item.alt}
+                    width={600}
+                    height={400}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover w-full h-64 md:h-80 transition-transform duration-500 group-hover:scale-105"
+                    placeholder="blur"
+                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
+                    priority={idx === 0 && index < 3}
+                    loading={idx === 0 && index < 3 ? "eager" : "lazy"}
+                    onLoadStart={() => handleImageLoadStart(imageKey)}
+                    onLoad={() => handleImageLoad(imageKey)}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                    <h3 className="text-[var(--accent)] text-lg font-semibold">
+                      {item.alt}
+                    </h3>
+                    <p className="text-[var(--secondary)] text-sm">{item.desc}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
       ))}

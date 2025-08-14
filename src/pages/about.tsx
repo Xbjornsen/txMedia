@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Image from "next/image";
 
 export default function About() {
   return (
@@ -31,8 +32,16 @@ export default function About() {
             </p>
           </div>
           <div className="text-center">
-            <div className="w-48 h-48 mx-auto bg-[var(--gradient-start)] rounded-full flex items-center justify-center border-4 border-[var(--accent)]/20">
-              <span className="text-6xl text-[var(--accent)]">📸</span>
+            <div className="w-48 h-48 mx-auto bg-[var(--gradient-start)] rounded-full flex items-center justify-center border-4 border-[var(--accent)]/20 overflow-hidden">
+              <Image
+                src="/contact.jpg"
+                alt="Xavier Thorbjornsen - Tx Media Photographer"
+                width={192}
+                height={192}
+                className="object-cover w-full h-full"
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
+              />
             </div>
           </div>
         </div>
