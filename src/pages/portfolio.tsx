@@ -5,6 +5,7 @@ import ImageSkeleton from "../components/ImageSkeleton";
 import ImageModal from "../components/ImageModal";
 import VideoModal from "../components/VideoModal";
 import PortfolioFilter from "../components/PortfolioFilter";
+import BookingCalendar from "../components/BookingCalendar";
 
 // Portfolio items organized by your specific categories
 interface PortfolioItem {
@@ -147,6 +148,26 @@ const portfolioItems: PortfolioItems = {
   ],
 };
 
+// Pricing information for each category
+const categoryPricing = {
+  "Aerial Visions": {
+    startingPrice: "$750",
+    description: "Professional drone photography and videography"
+  },
+  "Weddings": {
+    startingPrice: "$2000",
+    description: "Complete wedding photography packages"
+  },
+  "Portraits": {
+    startingPrice: "$450", 
+    description: "Professional portrait sessions"
+  },
+  "Wall Prints": {
+    startingPrice: "$150",
+    description: "High-quality prints available for purchase"
+  }
+};
+
 export default function Portfolio() {
   const [loadingImages, setLoadingImages] = useState<{[key: string]: boolean}>({});
   const [selectedImage, setSelectedImage] = useState<{
@@ -162,6 +183,8 @@ export default function Portfolio() {
   } | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState<string>("");
 
   const categories = ["All", ...Object.keys(portfolioItems)];
 
@@ -229,6 +252,22 @@ export default function Portfolio() {
     setSelectedVideo(null);
   };
 
+  const openBookingCalendar = (service: string) => {
+    setSelectedService(service);
+    setIsCalendarOpen(true);
+  };
+
+  const closeBookingCalendar = () => {
+    setIsCalendarOpen(false);
+    setSelectedService("");
+  };
+
+  const handleDateSelect = (date: string) => {
+    console.log(`Booking ${selectedService} for ${date}`);
+    // In a real app, this would send the booking to an API
+    alert(`Booking request for ${selectedService} on ${date} has been submitted! We'll contact you soon.`);
+  };
+
   return (
     <>
       <Head>
@@ -260,11 +299,33 @@ export default function Portfolio() {
       )}
 
       {/* Category Sections */}
-      {Object.entries(filteredItems).map(([category, items], idx) => (
+      {Object.entries(filteredItems).map(([category, items], idx) => {
+        const pricing = categoryPricing[category as keyof typeof categoryPricing];
+        
+        return (
         <section key={idx} className="mb-16">
-          <h2 className="text-2xl md:text-3xl font-semibold text-[var(--accent)] mb-6 text-center">
-            {category}
-          </h2>
+          <div className="text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-semibold text-[var(--accent)] mb-2">
+              {category}
+            </h2>
+            {pricing && (
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="inline-flex items-center gap-4 bg-[var(--gradient-start)] rounded-lg px-4 py-2 border border-[var(--secondary)]/20">
+                  <span className="text-[var(--secondary)] text-sm">{pricing.description}</span>
+                  <span className="text-[var(--accent)] font-semibold">Starting from {pricing.startingPrice}</span>
+                </div>
+                <button
+                  onClick={() => openBookingCalendar(category)}
+                  className="px-6 py-2 bg-[var(--accent)] text-[var(--background)] rounded-lg hover:bg-opacity-80 transition-all duration-300 font-medium min-h-[44px] flex items-center gap-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Book Now
+                </button>
+              </div>
+            )}
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {items.map((item, index) => {
               const imageKey = `${category}-${index}`;
@@ -348,7 +409,8 @@ export default function Portfolio() {
             })}
           </div>
         </section>
-      ))}
+        );
+      })}
 
       {/* No results message */}
       {Object.keys(filteredItems).length === 0 && (
@@ -383,6 +445,14 @@ export default function Portfolio() {
         description={selectedVideo.description}
       />
     )}
+
+    {/* Booking Calendar */}
+    <BookingCalendar
+      isOpen={isCalendarOpen}
+      onClose={closeBookingCalendar}
+      serviceType={selectedService}
+      onDateSelect={handleDateSelect}
+    />
     </>
   );
 }
