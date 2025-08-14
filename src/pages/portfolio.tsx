@@ -66,6 +66,21 @@ const portfolioItems = {
       alt: "Contemporay",
       desc: "Macro shots ready for printing",
     },
+    {
+      src: "/rainbow_bee_eater.jpg",
+      alt: "Rainbow Bee-eater",
+      desc: "Colorful bird captured in natural habitat",
+    },
+    {
+      src: "/lightning_storm.jpg",
+      alt: "Lightning Storm",
+      desc: "Dramatic weather photography perfect for large prints",
+    },
+    {
+      src: "/red_headed_finch.jpg",
+      alt: "Red-headed Finch",
+      desc: "Beautiful bird portrait with shallow depth of field",
+    },
   ],
 };
 
