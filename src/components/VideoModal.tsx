@@ -41,7 +41,7 @@ export default function VideoModal({ isOpen, onClose, videoSrc, title, descripti
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 text-white hover:text-[var(--accent)] transition-colors p-2 bg-black/50 rounded-full"
+          className="absolute top-4 right-4 z-10 text-white hover:text-[var(--accent)] transition-colors p-3 bg-black/50 rounded-full min-w-[44px] min-h-[44px] flex items-center justify-center"
           aria-label="Close modal"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,8 +68,8 @@ export default function VideoModal({ isOpen, onClose, videoSrc, title, descripti
           <p className="text-sm text-gray-300">{description}</p>
         </div>
 
-        {/* Navigation hint */}
-        <div className="absolute bottom-4 right-4 text-white/70 text-sm">
+        {/* Navigation hint - desktop only */}
+        <div className="absolute bottom-4 right-4 text-white/70 text-sm hidden md:block">
           Press ESC to close
         </div>
       </div>
