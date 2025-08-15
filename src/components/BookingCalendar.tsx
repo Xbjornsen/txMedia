@@ -1,10 +1,17 @@
 import { useState, useEffect } from 'react';
 
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+}
+
 interface BookingCalendarProps {
   isOpen: boolean;
   onClose: () => void;
   serviceType: string;
-  onDateSelect: (date: string) => void;
+  onBookingSubmit: (date: string, formData: FormData) => void;
 }
 
 interface CalendarDay {
@@ -15,10 +22,19 @@ interface CalendarDay {
   isSelected: boolean;
 }
 
-export default function BookingCalendar({ isOpen, onClose, serviceType, onDateSelect }: BookingCalendarProps) {
+export default function BookingCalendar({ isOpen, onClose, serviceType, onBookingSubmit }: BookingCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [calendarDays, setCalendarDays] = useState<CalendarDay[]>([]);
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   // Mock unavailable dates (in real app, this would come from API)
   const unavailableDates = [
@@ -122,17 +138,53 @@ export default function BookingCalendar({ isOpen, onClose, serviceType, onDateSe
     setSelectedDate(day.date);
   };
 
-  const handleConfirm = () => {
+  const handleDateConfirm = () => {
     if (selectedDate) {
-      const dateString = selectedDate.toLocaleDateString('en-AU', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-      onDateSelect(dateString);
-      onClose();
+      setShowForm(true);
     }
+  };
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormError(null);
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.name || !formData.email || !formData.phone) {
+      setFormError('Please fill out all required fields.');
+      return;
+    }
+
+    if (selectedDate) {
+      setIsSubmitting(true);
+      try {
+        const dateString = selectedDate.toLocaleDateString('en-AU', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+        await onBookingSubmit(dateString, formData);
+        
+        // Reset form and close
+        setFormData({ name: '', email: '', phone: '', message: '' });
+        setSelectedDate(null);
+        setShowForm(false);
+        onClose();
+      } catch {
+        setFormError('Failed to submit booking. Please try again.');
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
+  };
+
+  const handleBackToCalendar = () => {
+    setShowForm(false);
+    setFormError(null);
   };
 
   if (!isOpen) return null;
@@ -229,36 +281,170 @@ export default function BookingCalendar({ isOpen, onClose, serviceType, onDateSe
           </div>
         </div>
 
-        {selectedDate && (
-          <div className="text-center mb-4 p-3 bg-[var(--gradient-start)] rounded-lg">
-            <p className="text-sm text-[var(--secondary)]">Selected Date:</p>
-            <p className="font-medium text-[var(--foreground)]">
-              {selectedDate.toLocaleDateString('en-AU', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </p>
-          </div>
-        )}
+        {!showForm ? (
+          <>
+            {selectedDate && (
+              <div className="text-center mb-4 p-3 bg-[var(--gradient-start)] rounded-lg">
+                <p className="text-sm text-[var(--secondary)]">Selected Date:</p>
+                <p className="font-medium text-[var(--foreground)]">
+                  {selectedDate.toLocaleDateString('en-AU', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </p>
+              </div>
+            )}
 
-        {/* Action Buttons */}
-        <div className="flex gap-3">
-          <button
-            onClick={onClose}
-            className="flex-1 px-4 py-2 bg-[var(--secondary)]/20 text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/30 transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleConfirm}
-            disabled={!selectedDate}
-            className="flex-1 px-4 py-2 bg-[var(--accent)] text-[var(--background)] rounded-lg hover:bg-opacity-80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Confirm Date
-          </button>
-        </div>
+            {/* Action Buttons */}
+            <div className="flex gap-3">
+              <button
+                onClick={onClose}
+                className="flex-1 px-4 py-2 bg-[var(--secondary)]/20 text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/30 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDateConfirm}
+                disabled={!selectedDate}
+                className="flex-1 px-4 py-2 bg-[var(--accent)] text-[var(--background)] rounded-lg hover:bg-opacity-80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Continue
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Booking Form */}
+            <div className="mb-4 p-3 bg-[var(--gradient-start)] rounded-lg">
+              <p className="text-sm text-[var(--secondary)]">Booking Date:</p>
+              <p className="font-medium text-[var(--foreground)]">
+                {selectedDate?.toLocaleDateString('en-AU', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </p>
+            </div>
+
+            {formError && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-300 rounded-lg">
+                <p className="text-red-700 text-sm">{formError}</p>
+              </div>
+            )}
+
+            <form onSubmit={handleFormSubmit} className="space-y-4">
+              <div>
+                <label className="block text-[var(--foreground)] text-sm mb-1 font-medium">
+                  Name *
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleFormChange}
+                  required
+                  disabled={isSubmitting}
+                  className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50"
+                  placeholder="Your full name"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[var(--foreground)] text-sm mb-1 font-medium">
+                  Email *
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleFormChange}
+                  required
+                  disabled={isSubmitting}
+                  className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50"
+                  placeholder="your.email@example.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[var(--foreground)] text-sm mb-1 font-medium">
+                  Phone Number *
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleFormChange}
+                  required
+                  disabled={isSubmitting}
+                  className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50"
+                  placeholder="0412 345 678"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[var(--foreground)] text-sm mb-1 font-medium">
+                  Message (Optional)
+                </label>
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleFormChange}
+                  disabled={isSubmitting}
+                  rows={3}
+                  className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50 resize-none"
+                  placeholder="Any specific requirements or questions..."
+                />
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={handleBackToCalendar}
+                  disabled={isSubmitting}
+                  className="flex-1 px-4 py-2 bg-[var(--secondary)]/20 text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/30 transition-colors disabled:opacity-50"
+                >
+                  Back
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex-1 px-4 py-2 bg-[var(--accent)] text-[var(--background)] rounded-lg hover:bg-opacity-80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <svg
+                        className="animate-spin h-4 w-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z"
+                        ></path>
+                      </svg>
+                      Sending...
+                    </>
+                  ) : (
+                    'Submit Booking'
+                  )}
+                </button>
+              </div>
+            </form>
+          </>
+        )}
       </div>
     </div>
   );

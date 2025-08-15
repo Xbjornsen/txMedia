@@ -263,7 +263,14 @@ export default function Portfolio() {
     setSelectedService("");
   };
 
-  const handleDateSelect = async (date: string) => {
+  interface BookingFormData {
+    name: string;
+    email: string;
+    phone: string;
+    message: string;
+  }
+
+  const handleBookingSubmit = async (date: string, formData: BookingFormData) => {
     try {
       const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
       const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
@@ -275,16 +282,15 @@ export default function Portfolio() {
           templateId,
           publicKey,
         });
-        alert("Configuration error. Please contact support.");
-        return;
+        throw new Error("Configuration error. Please contact support.");
       }
 
       const templateParams = {
         package: selectedService,
-        name: "Portfolio Booking",
-        phone: "Not provided",
-        email: "txfotography@gmail.com",
-        request: `New booking inquiry for ${selectedService} service`,
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        request: formData.message || `New booking inquiry for ${selectedService} service`,
         bookingDate: date,
         time: new Date().toLocaleString(),
       };
@@ -293,7 +299,7 @@ export default function Portfolio() {
       alert(`Booking request for ${selectedService} on ${date} has been sent! We'll contact you soon.`);
     } catch (error) {
       console.error("Failed to send booking email:", error);
-      alert("Failed to send booking request. Please try contacting us directly.");
+      throw new Error("Failed to send booking request. Please try contacting us directly.");
     }
   };
 
@@ -480,7 +486,7 @@ export default function Portfolio() {
       isOpen={isCalendarOpen}
       onClose={closeBookingCalendar}
       serviceType={selectedService}
-      onDateSelect={handleDateSelect}
+      onBookingSubmit={handleBookingSubmit}
     />
     </>
   );
