@@ -23,24 +23,24 @@ export default function Contact() {
         </div>
         
         {/* Content Container */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 py-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
+          <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center">
             
             {/* Left Side - Hero Content */}
-            <div className="text-white space-y-6">
-              <div className="space-y-4">
-                <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-tight">
+            <div className="text-white space-y-4 lg:space-y-6">
+              <div className="space-y-3 lg:space-y-4">
+                <h1 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-tight">
                   Let&apos;s Create
                   <span className="block text-[var(--accent)]">Something Amazing</span>
                 </h1>
-                <p className="text-xl lg:text-2xl text-gray-200 leading-relaxed">
+                <p className="text-base sm:text-lg lg:text-xl xl:text-2xl text-gray-200 leading-relaxed">
                   Ready to capture your special moments? 
                   <span className="block">Get in touch today.</span>
                 </p>
               </div>
               
               {/* Services List */}
-              <div className="grid sm:grid-cols-2 gap-4 pt-6">
+              <div className="grid sm:grid-cols-2 gap-3 lg:gap-4 pt-4 lg:pt-6">
                 <div className="flex items-center gap-3">
                   <div className="w-2 h-2 bg-[var(--accent)] rounded-full"></div>
                   <span className="text-gray-300">Drone Photography</span>
@@ -62,22 +62,22 @@ export default function Contact() {
             
             {/* Right Side - Contact Card */}
             <div className="flex justify-center lg:justify-end">
-              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 lg:p-10 shadow-2xl max-w-lg w-full">
-                <div className="text-center space-y-6">
-                  <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 xl:p-10 shadow-2xl max-w-lg w-full mx-4 sm:mx-0">
+                <div className="text-center space-y-4 sm:space-y-6">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
                     Get In Touch
                   </h2>
                   
                   {/* Contact Methods */}
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {/* Email */}
                     <a
                       href="mailto:txfotography@gmail.com"
-                      className="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-50 transition-all duration-300 group min-h-[60px]"
+                      className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl hover:bg-gray-50 transition-all duration-300 group min-h-[56px] sm:min-h-[60px]"
                     >
-                      <div className="w-12 h-12 bg-[var(--accent)]/10 rounded-full flex items-center justify-center group-hover:bg-[var(--accent)]/20 transition-colors">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--accent)]/10 rounded-full flex items-center justify-center group-hover:bg-[var(--accent)]/20 transition-colors flex-shrink-0">
                         <svg
-                          className="w-6 h-6 text-[var(--accent)]"
+                          className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--accent)]"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -90,9 +90,9 @@ export default function Contact() {
                           />
                         </svg>
                       </div>
-                      <div className="text-left">
-                        <p className="font-medium text-gray-900">Email</p>
-                        <p className="text-[var(--accent)] font-medium">txfotography@gmail.com</p>
+                      <div className="text-left min-w-0 flex-1">
+                        <p className="font-medium text-gray-900 text-sm sm:text-base">Email</p>
+                        <p className="text-[var(--accent)] font-medium text-sm sm:text-base break-all">txfotography@gmail.com</p>
                       </div>
                     </a>
                     
@@ -101,11 +101,11 @@ export default function Contact() {
                       href="https://www.instagram.com/txmedia_nt"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-50 transition-all duration-300 group min-h-[60px]"
+                      className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl hover:bg-gray-50 transition-all duration-300 group min-h-[56px] sm:min-h-[60px]"
                     >
-                      <div className="w-12 h-12 bg-[var(--accent)]/10 rounded-full flex items-center justify-center group-hover:bg-[var(--accent)]/20 transition-colors">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--accent)]/10 rounded-full flex items-center justify-center group-hover:bg-[var(--accent)]/20 transition-colors flex-shrink-0">
                         <svg
-                          className="w-6 h-6 text-[var(--accent)]"
+                          className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--accent)]"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -130,9 +130,9 @@ export default function Contact() {
                           />
                         </svg>
                       </div>
-                      <div className="text-left">
-                        <p className="font-medium text-gray-900">Instagram</p>
-                        <p className="text-[var(--accent)] font-medium">@txmedia_nt</p>
+                      <div className="text-left min-w-0 flex-1">
+                        <p className="font-medium text-gray-900 text-sm sm:text-base">Instagram</p>
+                        <p className="text-[var(--accent)] font-medium text-sm sm:text-base">@txmedia_nt</p>
                       </div>
                     </a>
 
@@ -140,7 +140,7 @@ export default function Contact() {
                     <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 min-h-[60px]">
                       <div className="w-12 h-12 bg-[var(--accent)]/10 rounded-full flex items-center justify-center">
                         <svg
-                          className="w-6 h-6 text-[var(--accent)]"
+                          className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--accent)]"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
