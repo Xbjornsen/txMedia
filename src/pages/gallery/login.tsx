@@ -17,7 +17,7 @@ export default function GalleryLogin() {
     setIsLoading(true)
 
     try {
-      const result = await signIn('credentials', {
+      const result = await signIn('gallery', {
         gallerySlug,
         password,
         redirect: false

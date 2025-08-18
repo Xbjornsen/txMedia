@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "setup-test-gallery": "node scripts/setup-test-gallery.js"
+    "setup-test-gallery": "node scripts/setup-test-gallery.js",
+    "create-test-gallery": "node scripts/create-test-gallery.js",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:reset": "prisma migrate reset"
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.7",
