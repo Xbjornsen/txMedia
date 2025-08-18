@@ -1,0 +1,148 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  galleries     Gallery[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Gallery {
+  id            String   @id @default(cuid())
+  title         String
+  description   String?
+  slug          String   @unique
+  password      String
+  clientName    String
+  clientEmail   String
+  eventDate     DateTime?
+  eventType     String   // "wedding", "portrait", "drone", etc.
+  isActive      Boolean  @default(true)
+  expiryDate    DateTime?
+  downloadLimit Int      @default(50)
+  
+  // Relationships
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  images        GalleryImage[]
+  downloads     Download[]
+  favorites     Favorite[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GalleryImage {
+  id            String   @id @default(cuid())
+  fileName      String
+  originalName  String
+  filePath      String
+  thumbnailPath String?
+  watermarkPath String?
+  fileSize      Int
+  width         Int
+  height        Int
+  order         Int      @default(0)
+  isPublic      Boolean  @default(true)
+  
+  // Relationships
+  galleryId     String
+  gallery       Gallery    @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  downloads     Download[]
+  favorites     Favorite[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Download {
+  id         String   @id @default(cuid())
+  clientIp   String
+  userAgent  String?
+  
+  // Relationships
+  galleryId  String
+  gallery    Gallery      @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  imageId    String
+  image      GalleryImage @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  
+  downloadedAt DateTime @default(now())
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  clientIp  String
+  
+  // Relationships
+  galleryId String
+  gallery   Gallery      @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  imageId   String
+  image     GalleryImage @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@unique([clientIp, imageId])
+}
+
+model GalleryAccess {
+  id          String   @id @default(cuid())
+  galleryId   String
+  clientIp    String
+  userAgent   String?
+  accessedAt  DateTime @default(now())
+  
+  @@index([galleryId])
+  @@index([clientIp])
+}
