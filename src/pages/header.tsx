@@ -88,6 +88,14 @@ export default function Header() {
               Contact
             </Link>
           </li>
+          <li>
+            <Link
+              href="/gallery/login"
+              className="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors border border-[var(--accent)] px-3 py-1 rounded-lg"
+            >
+              Client Gallery
+            </Link>
+          </li>
         </ul>
         {/* Mobile Menu Button */}
         <button
@@ -159,6 +167,15 @@ export default function Header() {
               className="block w-full py-3 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center"
             >
               Contact
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/gallery/login"
+              onClick={() => setIsMenuOpen(false)}
+              className="block w-full py-3 px-4 text-[var(--accent)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center border-t border-[var(--accent)]/20"
+            >
+              Client Gallery Access
             </Link>
           </li>
         </ul>
