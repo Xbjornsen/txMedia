@@ -197,18 +197,18 @@ export default function BookingCalendar({ isOpen, onClose, serviceType, onBookin
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4" onClick={onClose}>
       <div 
-        className="bg-[var(--background)] rounded-xl p-6 w-full max-w-md mx-auto"
+        className="bg-[var(--background)] rounded-xl p-4 sm:p-6 w-full max-w-md mx-auto max-h-[95vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-[var(--foreground)]">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
+          <h2 className="text-lg sm:text-xl font-semibold text-[var(--foreground)] pr-2">
             Book {serviceType}
           </h2>
           <button
             onClick={onClose}
-            className="text-[var(--secondary)] hover:text-[var(--accent)] transition-colors p-2"
+            className="text-[var(--secondary)] hover:text-[var(--accent)] transition-colors p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -217,21 +217,21 @@ export default function BookingCalendar({ isOpen, onClose, serviceType, onBookin
         </div>
 
         {/* Calendar Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-3 sm:mb-4">
           <button
             onClick={() => navigateMonth('prev')}
-            className="p-2 hover:bg-[var(--gradient-start)] rounded-lg transition-colors"
+            className="p-2 hover:bg-[var(--gradient-start)] rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <h3 className="text-lg font-medium text-[var(--foreground)]">
+          <h3 className="text-base sm:text-lg font-medium text-[var(--foreground)] text-center px-2">
             {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
           </h3>
           <button
             onClick={() => navigateMonth('next')}
-            className="p-2 hover:bg-[var(--gradient-start)] rounded-lg transition-colors"
+            className="p-2 hover:bg-[var(--gradient-start)] rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -242,21 +242,21 @@ export default function BookingCalendar({ isOpen, onClose, serviceType, onBookin
         {/* Day Names */}
         <div className="grid grid-cols-7 gap-1 mb-2">
           {dayNames.map(day => (
-            <div key={day} className="p-2 text-center text-sm font-medium text-[var(--secondary)]">
+            <div key={day} className="p-1 sm:p-2 text-center text-xs sm:text-sm font-medium text-[var(--secondary)]">
               {day}
             </div>
           ))}
         </div>
 
         {/* Calendar Grid */}
-        <div className="grid grid-cols-7 gap-1 mb-6">
+        <div className="grid grid-cols-7 gap-1 mb-4 sm:mb-6">
           {calendarDays.map((day, index) => (
             <button
               key={index}
               onClick={() => handleDateSelect(day)}
               disabled={!day.isAvailable}
               className={`
-                p-2 text-sm rounded-lg transition-all duration-200 min-h-[40px] flex items-center justify-center
+                p-1 sm:p-2 text-xs sm:text-sm rounded-lg transition-all duration-200 min-h-[44px] flex items-center justify-center
                 ${!day.isCurrentMonth ? 'text-[var(--secondary)]/30' : ''}
                 ${day.isToday ? 'ring-2 ring-[var(--accent)]' : ''}
                 ${day.isSelected ? 'bg-[var(--accent)] text-[var(--background)]' : ''}
@@ -270,7 +270,7 @@ export default function BookingCalendar({ isOpen, onClose, serviceType, onBookin
         </div>
 
         {/* Legend */}
-        <div className="flex justify-center gap-4 text-xs text-[var(--secondary)] mb-6">
+        <div className="flex justify-center gap-3 sm:gap-4 text-xs text-[var(--secondary)] mb-4 sm:mb-6">
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 bg-[var(--accent)] rounded"></div>
             <span>Available</span>
@@ -284,9 +284,9 @@ export default function BookingCalendar({ isOpen, onClose, serviceType, onBookin
         {!showForm ? (
           <>
             {selectedDate && (
-              <div className="text-center mb-4 p-3 bg-[var(--gradient-start)] rounded-lg">
+              <div className="text-center mb-3 sm:mb-4 p-3 bg-[var(--gradient-start)] rounded-lg">
                 <p className="text-sm text-[var(--secondary)]">Selected Date:</p>
-                <p className="font-medium text-[var(--foreground)]">
+                <p className="font-medium text-[var(--foreground)] text-sm sm:text-base">
                   {selectedDate.toLocaleDateString('en-AU', {
                     weekday: 'long',
                     year: 'numeric',
@@ -298,17 +298,17 @@ export default function BookingCalendar({ isOpen, onClose, serviceType, onBookin
             )}
 
             {/* Action Buttons */}
-            <div className="flex gap-3">
+            <div className="flex gap-2 sm:gap-3">
               <button
                 onClick={onClose}
-                className="flex-1 px-4 py-2 bg-[var(--secondary)]/20 text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/30 transition-colors"
+                className="flex-1 px-3 sm:px-4 py-3 bg-[var(--secondary)]/20 text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/30 transition-colors min-h-[44px] text-sm sm:text-base"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDateConfirm}
                 disabled={!selectedDate}
-                className="flex-1 px-4 py-2 bg-[var(--accent)] text-[var(--background)] rounded-lg hover:bg-opacity-80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-3 sm:px-4 py-3 bg-[var(--accent)] text-[var(--background)] rounded-lg hover:bg-opacity-80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] text-sm sm:text-base"
               >
                 Continue
               </button>
@@ -317,9 +317,9 @@ export default function BookingCalendar({ isOpen, onClose, serviceType, onBookin
         ) : (
           <>
             {/* Booking Form */}
-            <div className="mb-4 p-3 bg-[var(--gradient-start)] rounded-lg">
+            <div className="mb-3 sm:mb-4 p-3 bg-[var(--gradient-start)] rounded-lg">
               <p className="text-sm text-[var(--secondary)]">Booking Date:</p>
-              <p className="font-medium text-[var(--foreground)]">
+              <p className="font-medium text-[var(--foreground)] text-sm sm:text-base">
                 {selectedDate?.toLocaleDateString('en-AU', {
                   weekday: 'long',
                   year: 'numeric',
@@ -335,7 +335,7 @@ export default function BookingCalendar({ isOpen, onClose, serviceType, onBookin
               </div>
             )}
 
-            <form onSubmit={handleFormSubmit} className="space-y-4">
+            <form onSubmit={handleFormSubmit} className="space-y-3 sm:space-y-4">
               <div>
                 <label className="block text-[var(--foreground)] text-sm mb-1 font-medium">
                   Name *
@@ -347,7 +347,7 @@ export default function BookingCalendar({ isOpen, onClose, serviceType, onBookin
                   onChange={handleFormChange}
                   required
                   disabled={isSubmitting}
-                  className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50"
+                  className="w-full px-3 py-3 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50 text-sm sm:text-base min-h-[44px]"
                   placeholder="Your full name"
                 />
               </div>
@@ -363,7 +363,7 @@ export default function BookingCalendar({ isOpen, onClose, serviceType, onBookin
                   onChange={handleFormChange}
                   required
                   disabled={isSubmitting}
-                  className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50"
+                  className="w-full px-3 py-3 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50 text-sm sm:text-base min-h-[44px]"
                   placeholder="your.email@example.com"
                 />
               </div>
@@ -379,7 +379,7 @@ export default function BookingCalendar({ isOpen, onClose, serviceType, onBookin
                   onChange={handleFormChange}
                   required
                   disabled={isSubmitting}
-                  className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50"
+                  className="w-full px-3 py-3 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50 text-sm sm:text-base min-h-[44px]"
                   placeholder="0412 345 678"
                 />
               </div>
@@ -394,24 +394,24 @@ export default function BookingCalendar({ isOpen, onClose, serviceType, onBookin
                   onChange={handleFormChange}
                   disabled={isSubmitting}
                   rows={3}
-                  className="w-full px-3 py-2 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50 resize-none"
+                  className="w-full px-3 py-3 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50 resize-none text-sm sm:text-base"
                   placeholder="Any specific requirements or questions..."
                 />
               </div>
 
-              <div className="flex gap-3 pt-2">
+              <div className="flex gap-2 sm:gap-3 pt-2">
                 <button
                   type="button"
                   onClick={handleBackToCalendar}
                   disabled={isSubmitting}
-                  className="flex-1 px-4 py-2 bg-[var(--secondary)]/20 text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/30 transition-colors disabled:opacity-50"
+                  className="flex-1 px-3 sm:px-4 py-3 bg-[var(--secondary)]/20 text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/30 transition-colors disabled:opacity-50 min-h-[44px] text-sm sm:text-base"
                 >
                   Back
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 px-4 py-2 bg-[var(--accent)] text-[var(--background)] rounded-lg hover:bg-opacity-80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="flex-1 px-3 sm:px-4 py-3 bg-[var(--accent)] text-[var(--background)] rounded-lg hover:bg-opacity-80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-h-[44px] text-sm sm:text-base"
                 >
                   {isSubmitting ? (
                     <>
