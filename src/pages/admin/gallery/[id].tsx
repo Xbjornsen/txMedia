@@ -65,7 +65,7 @@ export default function AdminGalleryEdit() {
   useEffect(() => {
     if (status === 'loading') return
 
-    if (status === 'unauthenticated' || (session?.user as { type?: string } | undefined)?.type !== 'admin') {
+    if (status === 'unauthenticated' || (session?.user as { type?: string })?.type !== 'admin') {
       router.push('/admin/login')
       return
     }
