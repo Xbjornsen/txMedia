@@ -67,6 +67,7 @@ export default NextAuth({
       if (user) {
         token.gallerySlug = user.gallerySlug
         token.galleryTitle = user.galleryTitle
+        token.type = user.type
       }
       return token
     },
@@ -74,12 +75,9 @@ export default NextAuth({
       if (token) {
         session.user.gallerySlug = token.gallerySlug
         session.user.galleryTitle = token.galleryTitle
+        session.user.type = token.type
       }
       return session
     }
-  },
-  pages: {
-    signIn: '/gallery/login',
-    error: '/gallery/login'
   }
 })
