@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
@@ -33,10 +32,21 @@ interface GalleryImage {
   isPublic: boolean
 }
 
+interface AdminSession {
+  user: {
+    id: string
+    name: string
+    email: string
+    type: string
+  }
+  loginTime: number
+}
+
 export default function AdminGalleryEdit() {
-  const { data: session, status } = useSession()
   const router = useRouter()
   const { id } = router.query
+  const [adminSession, setAdminSession] = useState<AdminSession | null>(null)
+  const [isAuthLoading, setIsAuthLoading] = useState(true)
   
   const [gallery, setGallery] = useState<Gallery | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -63,17 +73,42 @@ export default function AdminGalleryEdit() {
   }, [id])
 
   useEffect(() => {
-    if (status === 'loading') return
+    if (typeof window === 'undefined') return
 
-    if (status === 'unauthenticated' || (session?.user as { type?: string })?.type !== 'admin') {
-      router.push('/admin/login')
-      return
+    const checkAdminAuth = () => {
+      const storedSession = sessionStorage.getItem('adminSession')
+      if (!storedSession) {
+        router.push('/admin/login')
+        return
+      }
+
+      try {
+        const session = JSON.parse(storedSession)
+        // Check if session is still valid (24 hours)
+        const isExpired = Date.now() - session.loginTime > 24 * 60 * 60 * 1000
+        if (isExpired) {
+          sessionStorage.removeItem('adminSession')
+          router.push('/admin/login')
+          return
+        }
+
+        setAdminSession(session)
+        setIsAuthLoading(false)
+      } catch (error) {
+        console.error('Session parse error:', error)
+        sessionStorage.removeItem('adminSession')
+        router.push('/admin/login')
+      }
     }
 
-    if (id) {
+    checkAdminAuth()
+  }, [router])
+
+  useEffect(() => {
+    if (!isAuthLoading && adminSession && id) {
       fetchGallery()
     }
-  }, [session, status, router, id, fetchGallery])
+  }, [isAuthLoading, adminSession, id, fetchGallery])
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -161,7 +196,7 @@ export default function AdminGalleryEdit() {
     }
   }
 
-  if (status === 'loading' || isLoading) {
+  if (isAuthLoading || isLoading) {
     return (
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
         <div className="text-center">
