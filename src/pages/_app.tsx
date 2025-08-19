@@ -24,19 +24,22 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <SessionProvider session={pageProps.session}>
+    <>
       {isGalleryPage ? (
-        // Gallery pages don't need header/footer
+        // Gallery pages don't use NextAuth SessionProvider
         <Component {...pageProps} />
       ) : (
-        <div className="flex flex-col min-h-screen bg-[var(--background)]">
-          <Header />
-          <main className="flex flex-col flex-grow">
-            <Component {...pageProps} />
-          </main>
-          <Footer />
-        </div>
+        // Admin and main pages use NextAuth SessionProvider
+        <SessionProvider session={pageProps.session}>
+          <div className="flex flex-col min-h-screen bg-[var(--background)]">
+            <Header />
+            <main className="flex flex-col flex-grow">
+              <Component {...pageProps} />
+            </main>
+            <Footer />
+          </div>
+        </SessionProvider>
       )}
-    </SessionProvider>
+    </>
   );
 }
