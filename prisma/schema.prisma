@@ -79,6 +79,7 @@ model Gallery {
   images        GalleryImage[]
   downloads     Download[]
   favorites     Favorite[]
+  accessLogs    GalleryAccess[]
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -139,6 +140,7 @@ model Favorite {
 model GalleryAccess {
   id          String   @id @default(cuid())
   galleryId   String
+  gallery     Gallery  @relation(fields: [galleryId], references: [id], onDelete: Cascade)
   clientIp    String
   userAgent   String?
   accessedAt  DateTime @default(now())
