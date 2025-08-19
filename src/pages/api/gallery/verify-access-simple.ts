@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from '@/lib/prisma'
+import { Client } from 'pg'
 import bcrypt from 'bcryptjs'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -17,23 +17,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
     }
 
-    // Find the gallery
-    const gallery = await prisma.gallery.findUnique({
-      where: {
-        slug: gallerySlug,
-        isActive: true
-      }
+    // Direct PostgreSQL connection
+    const client = new Client({
+      connectionString: process.env.DATABASE_URL
     })
 
-    if (!gallery) {
+    await client.connect()
+
+    // Find the gallery using direct SQL
+    const galleryResult = await client.query(`
+      SELECT id, title, slug, password, "clientName", "clientEmail", "eventType", "eventDate", "downloadLimit", "isActive", "expiryDate"
+      FROM "Gallery"
+      WHERE slug = $1 AND "isActive" = true
+    `, [gallerySlug])
+
+    if (galleryResult.rows.length === 0) {
+      await client.end()
       return res.status(404).json({ 
         success: false, 
         message: 'Gallery not found or inactive' 
       })
     }
 
+    const gallery = galleryResult.rows[0]
+
     // Check if gallery has expired
-    if (gallery.expiryDate && new Date() > gallery.expiryDate) {
+    if (gallery.expiryDate && new Date() > new Date(gallery.expiryDate)) {
+      await client.end()
       return res.status(403).json({ 
         success: false, 
         message: 'Gallery has expired' 
@@ -44,6 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const isValidPassword = await bcrypt.compare(password, gallery.password)
     
     if (!isValidPassword) {
+      await client.end()
       return res.status(401).json({ 
         success: false, 
         message: 'Invalid password' 
@@ -51,13 +62,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Log gallery access
-    await prisma.galleryAccess.create({
-      data: {
-        galleryId: gallery.id,
-        clientIp: req.socket.remoteAddress || 'unknown',
-        userAgent: req.headers['user-agent'] || undefined
-      }
-    })
+    await client.query(`
+      INSERT INTO "GalleryAccess" (id, "galleryId", "clientIp", "userAgent", "accessedAt")
+      VALUES ($1, $2, $3, $4, NOW())
+    `, [
+      `access-${Date.now()}`,
+      gallery.id,
+      req.socket.remoteAddress || 'unknown',
+      req.headers['user-agent'] || null
+    ])
+
+    await client.end()
 
     // Return success with gallery info
     res.status(200).json({

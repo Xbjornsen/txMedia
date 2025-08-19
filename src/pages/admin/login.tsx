@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
@@ -17,19 +16,42 @@ export default function AdminLogin() {
     setIsLoading(true)
 
     try {
-      const result = await signIn('admin', {
-        email,
-        password,
-        redirect: false
+      // Direct API call to simple admin login
+      const response = await fetch('/api/admin/login-simple', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password
+        })
       })
 
-      if (result?.error) {
-        setError('Invalid email or password. Please try again.')
-      } else {
+      const data = await response.json()
+
+      console.log('Login response:', response.status, data)
+      
+      if (response.ok && data.success) {
+        console.log('Login successful, storing session and redirecting')
+        
+        // Store admin session in sessionStorage
+        sessionStorage.setItem('adminSession', JSON.stringify({
+          user: data.user,
+          loginTime: Date.now()
+        }))
+        
+        console.log('Session stored, redirecting to dashboard')
+        
         // Redirect to admin dashboard
-        router.push('/admin/dashboard')
+        await router.push('/admin/dashboard')
+        console.log('Redirect completed')
+      } else {
+        console.log('Login failed:', data)
+        setError(data.message || 'Invalid email or password. Please try again.')
       }
-    } catch {
+    } catch (error) {
+      console.error('Login error:', error)
       setError('An error occurred. Please try again.')
     } finally {
       setIsLoading(false)

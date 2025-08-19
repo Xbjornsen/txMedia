@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from 'react'
-import { useSession, signOut } from 'next-auth/react'
-import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 
 interface Gallery {
   id: string
@@ -21,8 +20,8 @@ interface Gallery {
 }
 
 export default function AdminDashboard() {
-  const { data: session, status } = useSession()
   const router = useRouter()
+  const [adminSession, setAdminSession] = useState<any>(null)
   const [galleries, setGalleries] = useState<Gallery[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [stats, setStats] = useState({
@@ -33,30 +32,41 @@ export default function AdminDashboard() {
   })
 
   useEffect(() => {
-    if (status === 'loading') return
-
-    if (status === 'unauthenticated' || (session?.user as any)?.type !== 'admin') {
+    // Check for admin session in sessionStorage
+    if (typeof window === 'undefined') return
+    
+    const storedSession = sessionStorage.getItem('adminSession')
+    if (!storedSession) {
       router.push('/admin/login')
       return
     }
-
-    fetchDashboardData()
-  }, [session, status, router])
-
-  const fetchDashboardData = async () => {
+    
     try {
-      const response = await fetch('/api/admin/galleries')
-      if (response.ok) {
-        const data = await response.json()
-        setGalleries(data.galleries)
-        setStats(data.stats)
+      const session = JSON.parse(storedSession)
+      setAdminSession(session)
+      
+      // Fetch dashboard data inline
+      const fetchData = async () => {
+        try {
+          const response = await fetch('/api/admin/galleries-simple')
+          if (response.ok) {
+            const data = await response.json()
+            setGalleries(data.galleries)
+            setStats(data.stats)
+          }
+        } catch (error) {
+          console.error('Failed to fetch dashboard data:', error)
+        } finally {
+          setIsLoading(false)
+        }
       }
+      
+      fetchData()
     } catch (error) {
-      console.error('Failed to fetch dashboard data:', error)
-    } finally {
-      setIsLoading(false)
+      console.error('Invalid admin session:', error)
+      router.push('/admin/login')
     }
-  }
+  }, [router])
 
   const toggleGalleryStatus = async (galleryId: string, isActive: boolean) => {
     try {
@@ -78,7 +88,7 @@ export default function AdminDashboard() {
     }
   }
 
-  if (status === 'loading' || isLoading) {
+  if (isLoading || !adminSession) {
     return (
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
         <div className="text-center">
@@ -107,7 +117,7 @@ export default function AdminDashboard() {
                 </Link>
                 <h1 className="text-2xl font-bold text-[var(--foreground)]">Admin Dashboard</h1>
                 <p className="text-[var(--secondary)] text-sm">
-                  Welcome back, {session?.user?.name}
+                  Welcome back, {adminSession?.user?.name}
                 </p>
               </div>
               <div className="flex items-center gap-4">
@@ -118,7 +128,10 @@ export default function AdminDashboard() {
                   New Gallery
                 </Link>
                 <button
-                  onClick={() => signOut({ callbackUrl: '/admin/login' })}
+                  onClick={() => {
+                    sessionStorage.removeItem('adminSession')
+                    router.push('/admin/login')
+                  }}
                   className="px-4 py-2 bg-[var(--secondary)]/20 text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/30 transition-colors"
                 >
                   Logout

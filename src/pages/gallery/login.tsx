@@ -17,7 +17,7 @@ export default function GalleryLogin() {
 
     try {
       // Direct API call to verify gallery access
-      const response = await fetch('/api/gallery/verify-access', {
+      const response = await fetch('/api/gallery/verify-access-simple', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

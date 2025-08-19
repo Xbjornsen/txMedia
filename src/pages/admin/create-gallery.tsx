@@ -1,12 +1,11 @@
-import { useState } from 'react'
-import { useSession } from 'next-auth/react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
 
 export default function CreateGallery() {
-  const { data: session, status } = useSession()
   const router = useRouter()
+  const [adminSession, setAdminSession] = useState<{user: {name: string, email: string}} | null>(null)
   
   const [formData, setFormData] = useState({
     title: '',
@@ -23,17 +22,31 @@ export default function CreateGallery() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
-  if (status === 'loading') {
+  useEffect(() => {
+    // Check for admin session in sessionStorage
+    if (typeof window === 'undefined') return
+    
+    const storedSession = sessionStorage.getItem('adminSession')
+    if (!storedSession) {
+      router.push('/admin/login')
+      return
+    }
+    
+    try {
+      const session = JSON.parse(storedSession)
+      setAdminSession(session)
+    } catch (error) {
+      console.error('Invalid admin session:', error)
+      router.push('/admin/login')
+    }
+  }, [router])
+
+  if (!adminSession) {
     return (
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--accent)]"></div>
       </div>
     )
-  }
-
-  if (status === 'unauthenticated' || (session?.user as { type?: string })?.type !== 'admin') {
-    router.push('/admin/login')
-    return null
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -66,7 +79,7 @@ export default function CreateGallery() {
     setIsLoading(true)
 
     try {
-      const response = await fetch('/api/admin/create-gallery', {
+      const response = await fetch('/api/admin/create-gallery-simple', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
