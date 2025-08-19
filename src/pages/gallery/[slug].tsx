@@ -36,7 +36,7 @@ export default function GalleryView() {
   const [view, setView] = useState<'grid' | 'favorites'>('grid')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
-  const [galleryAccess, setGalleryAccess] = useState<any>(null)
+  const [galleryAccess, setGalleryAccess] = useState<{slug: string, clientName: string, title: string, accessTime: number} | null>(null)
 
   const fetchGallery = useCallback(async () => {
     try {
@@ -57,7 +57,9 @@ export default function GalleryView() {
   useEffect(() => {
     console.log('Gallery page useEffect - slug:', slug)
     
-    // Check for gallery access in sessionStorage
+    // Check for gallery access in sessionStorage (client-side only)
+    if (typeof window === 'undefined') return
+    
     const storedAccess = sessionStorage.getItem('galleryAccess')
     console.log('Stored access:', storedAccess)
     
@@ -139,7 +141,7 @@ export default function GalleryView() {
     }
   }
 
-  if (status === 'loading' || isLoading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
         <div className="text-center">
@@ -191,13 +193,16 @@ export default function GalleryView() {
                 </Link>
                 <h1 className="text-2xl font-bold text-[var(--foreground)]">{gallery.title}</h1>
                 <p className="text-[var(--secondary)] text-sm">
+                  {galleryAccess?.clientName && `Welcome, ${galleryAccess.clientName} • `}
                   {gallery.eventType} • {gallery.images.length} photos
                   {gallery.eventDate && ` • ${new Date(gallery.eventDate).toLocaleDateString()}`}
                 </p>
               </div>
               <button
                 onClick={() => {
-                  sessionStorage.removeItem('galleryAccess')
+                  if (typeof window !== 'undefined') {
+                    sessionStorage.removeItem('galleryAccess')
+                  }
                   router.push('/gallery/login')
                 }}
                 className="px-4 py-2 bg-[var(--secondary)]/20 text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/30 transition-colors"
