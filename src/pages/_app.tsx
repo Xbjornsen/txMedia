@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const isGalleryPage = router.pathname.startsWith('/gallery');
+  const isAdminPage = router.pathname.startsWith('/admin');
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
@@ -25,11 +26,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      {isGalleryPage ? (
-        // Gallery pages don't use NextAuth SessionProvider
+      {isGalleryPage || isAdminPage ? (
+        // Gallery and admin pages don't use NextAuth SessionProvider
         <Component {...pageProps} />
       ) : (
-        // Admin and main pages use NextAuth SessionProvider
+        // Main pages use NextAuth SessionProvider
         <SessionProvider session={pageProps.session}>
           <div className="flex flex-col min-h-screen bg-[var(--background)]">
             <Header />
