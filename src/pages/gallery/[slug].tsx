@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -29,7 +28,6 @@ interface Gallery {
 }
 
 export default function GalleryView() {
-  const { data: session, status } = useSession()
   const router = useRouter()
   const { slug } = router.query
   
@@ -38,6 +36,7 @@ export default function GalleryView() {
   const [view, setView] = useState<'grid' | 'favorites'>('grid')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
+  const [galleryAccess, setGalleryAccess] = useState<any>(null)
 
   const fetchGallery = useCallback(async () => {
     try {
@@ -56,17 +55,38 @@ export default function GalleryView() {
   }, [slug])
 
   useEffect(() => {
-    if (status === 'loading') return
+    console.log('Gallery page useEffect - slug:', slug)
+    
+    // Check for gallery access in sessionStorage
+    const storedAccess = sessionStorage.getItem('galleryAccess')
+    console.log('Stored access:', storedAccess)
+    
+    if (storedAccess) {
+      const access = JSON.parse(storedAccess)
+      console.log('Parsed access:', access)
+      console.log('Current slug:', slug, 'Access slug:', access.slug)
+      
+      // Check if access is for current gallery and not expired (24 hours)
+      if (access.slug === slug && Date.now() - access.accessTime < 24 * 60 * 60 * 1000) {
+        console.log('Access valid, setting gallery access')
+        setGalleryAccess(access)
+        if (slug) {
+          fetchGallery()
+        }
+        return
+      } else {
+        console.log('Access invalid - slug mismatch or expired')
+      }
+    } else {
+      console.log('No stored access found')
+    }
 
-    if (status === 'unauthenticated') {
+    // No valid access, redirect to login
+    if (slug) {
+      console.log('Redirecting to login')
       router.push('/gallery/login')
-      return
     }
-
-    if (session && slug) {
-      fetchGallery()
-    }
-  }, [session, status, slug, router, fetchGallery])
+  }, [slug, router, fetchGallery])
 
   const toggleFavorite = async (imageId: string) => {
     try {
@@ -176,7 +196,10 @@ export default function GalleryView() {
                 </p>
               </div>
               <button
-                onClick={() => signOut({ callbackUrl: '/gallery/login' })}
+                onClick={() => {
+                  sessionStorage.removeItem('galleryAccess')
+                  router.push('/gallery/login')
+                }}
                 className="px-4 py-2 bg-[var(--secondary)]/20 text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/30 transition-colors"
               >
                 Logout

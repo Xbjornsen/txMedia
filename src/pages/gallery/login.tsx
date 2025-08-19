@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
@@ -17,19 +16,39 @@ export default function GalleryLogin() {
     setIsLoading(true)
 
     try {
-      const result = await signIn('gallery', {
-        gallerySlug,
-        password,
-        redirect: false
+      // Direct API call to verify gallery access
+      const response = await fetch('/api/gallery/verify-access', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          gallerySlug,
+          password
+        })
       })
 
-      if (result?.error) {
-        setError('Invalid gallery ID or password. Please check your details and try again.')
-      } else {
+      const data = await response.json()
+      console.log('API Response:', { status: response.status, data })
+
+      if (response.ok && data.success) {
+        console.log('Login successful, redirecting...')
+        // Store gallery access in sessionStorage for the gallery page
+        sessionStorage.setItem('galleryAccess', JSON.stringify({
+          slug: gallerySlug,
+          clientName: data.gallery.clientName,
+          title: data.gallery.title,
+          accessTime: Date.now()
+        }))
+        
         // Redirect to gallery
         router.push(`/gallery/${gallerySlug}`)
+      } else {
+        console.log('Login failed:', data.message)
+        setError(data.message || 'Invalid gallery ID or password. Please check your details and try again.')
       }
-    } catch {
+    } catch (error) {
+      console.error('Login error:', error)
       setError('An error occurred. Please try again.')
     } finally {
       setIsLoading(false)

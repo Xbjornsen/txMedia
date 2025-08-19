@@ -1,8 +1,13 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
@@ -122,7 +127,7 @@ export default function Header() {
         </button>
       </nav>
       {/* Mobile Menu Dropdown */}
-      {isMenuOpen && (
+      {isMounted && isMenuOpen && (
         <ul className="md:hidden bg-[var(--background)] border-t border-[var(--secondary)]/20 absolute left-0 right-0 top-full z-50 shadow-md">
           <li>
             <Link
