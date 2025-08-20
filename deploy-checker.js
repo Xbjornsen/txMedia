@@ -93,7 +93,7 @@ class DeploymentChecker {
 
     const requiredFiles = [
       'package.json',
-      'next.config.ts',
+      'next.config.js',
       'tsconfig.json',
       'src/pages/_app.tsx',
       'src/pages/index.tsx',
@@ -418,10 +418,10 @@ class DeploymentChecker {
   async checkNextConfig() {
     this.log('info', 'Checking Next.js configuration...')
 
-    const nextConfigContent = this.readFile('next.config.ts')
+    const nextConfigContent = this.readFile('next.config.js')
     
     if (!nextConfigContent) {
-      this.log('error', 'next.config.ts not found')
+      this.log('error', 'next.config.js not found')
       return false
     }
 
@@ -445,7 +445,7 @@ class DeploymentChecker {
     this.log('info', 'Checking security headers configuration...')
 
     // Check if security headers are configured
-    const nextConfigContent = this.readFile('next.config.ts')
+    const nextConfigContent = this.readFile('next.config.js')
     
     const requiredHeaders = [
       'X-Content-Type-Options',
@@ -455,7 +455,7 @@ class DeploymentChecker {
     ]
 
     if (!nextConfigContent.includes('headers')) {
-      this.log('warning', 'No security headers configured in next.config.ts')
+      this.log('warning', 'No security headers configured in next.config.js')
       this.log('info', 'Consider adding security headers for production')
     }
 
@@ -802,7 +802,7 @@ class DeploymentChecker {
     this.log('info', 'Checking image optimization...')
 
     // Check Next.js config for image optimization
-    const nextConfig = this.readFile('next.config.ts')
+    const nextConfig = this.readFile('next.config.js')
     
     if (!nextConfig.includes('images:')) {
       this.log('warning', 'No image optimization configuration found')
@@ -847,7 +847,7 @@ class DeploymentChecker {
   async validateCaching() {
     this.log('info', 'Validating caching strategies...')
 
-    const nextConfig = this.readFile('next.config.ts')
+    const nextConfig = this.readFile('next.config.js')
     
     // Check for custom headers with cache control
     if (!nextConfig.includes('Cache-Control')) {

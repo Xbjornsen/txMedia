@@ -1,0 +1,47 @@
+{
+  "errors": [],
+  "warnings": [],
+  "info": [
+    {
+      "timestamp": "2025-08-20T12:22:45.775Z",
+      "level": "info",
+      "message": "Checking project structure...",
+      "details": null
+    },
+    {
+      "timestamp": "2025-08-20T12:22:45.776Z",
+      "level": "info",
+      "message": "Validating environment configuration...",
+      "details": null
+    },
+    {
+      "timestamp": "2025-08-20T12:22:45.860Z",
+      "level": "info",
+      "message": "Checking dependencies...",
+      "details": null
+    },
+    {
+      "timestamp": "2025-08-20T12:22:53.825Z",
+      "level": "info",
+      "message": "Validating TypeScript compilation...",
+      "details": null
+    },
+    {
+      "timestamp": "2025-08-20T12:22:57.280Z",
+      "level": "info",
+      "message": "Running ESLint...",
+      "details": null
+    }
+  ],
+  "performance": {},
+  "security": {},
+  "database": {},
+  "api": {},
+  "build": {},
+  "summary": {
+    "isDeploymentReady": true,
+    "duration": 14432,
+    "timestamp": "2025-08-20T12:23:00.204Z",
+    "totalIssues": 0
+  }
+}
