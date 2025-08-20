@@ -308,45 +308,54 @@ jobs:
     steps:
     - name: Download all reports
       uses: actions/download-artifact@v4
+      with:
+        path: ./reports
+        merge-multiple: true
       
     - name: Create deployment summary
       run: |
+        # Debug: List all downloaded files
+        echo "Downloaded artifacts:"
+        find . -name "*.json" -type f | sort
+        ls -la reports/ || echo "Reports directory not found"
+        
         echo "# Deployment Check Summary" > deployment-summary.md
         echo "" >> deployment-summary.md
         echo "## Results Overview" >> deployment-summary.md
         echo "" >> deployment-summary.md
         
-        if [ -f deployment-report-20.x/deployment-report.json ]; then
+        # Check for any pre-deployment report (both Node versions)
+        if [ -f reports/deployment-report-18.x/deployment-report.json ] || [ -f reports/deployment-report-20.x/deployment-report.json ]; then
           echo "✅ Pre-deployment checks completed" >> deployment-summary.md
         else
           echo "❌ Pre-deployment checks failed" >> deployment-summary.md
         fi
         
-        if [ -f build-artifacts/deployment-report.json ]; then
+        if [ -f reports/build-artifacts/deployment-report.json ]; then
           echo "✅ Build monitoring completed" >> deployment-summary.md
         else
           echo "❌ Build monitoring failed" >> deployment-summary.md
         fi
         
-        if [ -f security-report/deployment-report.json ]; then
+        if [ -f reports/security-report/deployment-report.json ]; then
           echo "✅ Security checks completed" >> deployment-summary.md
         else
           echo "❌ Security checks failed" >> deployment-summary.md
         fi
         
-        if [ -f api-test-results/deployment-report.json ]; then
+        if [ -f reports/api-test-results/deployment-report.json ]; then
           echo "✅ API tests completed" >> deployment-summary.md
         else
           echo "❌ API tests failed" >> deployment-summary.md
         fi
         
-        if [ -f photography-check-results/deployment-report.json ]; then
+        if [ -f reports/photography-check-results/deployment-report.json ]; then
           echo "✅ Photography app checks completed" >> deployment-summary.md
         else
           echo "❌ Photography app checks failed" >> deployment-summary.md
         fi
         
-        if [ -f performance-report/deployment-report.json ]; then
+        if [ -f reports/performance-report/deployment-report.json ]; then
           echo "✅ Performance checks completed" >> deployment-summary.md
         else
           echo "❌ Performance checks failed" >> deployment-summary.md
@@ -360,12 +369,12 @@ jobs:
         SUCCESS_COUNT=0
         TOTAL_COUNT=6
         
-        [ -f deployment-report-20.x/deployment-report.json ] && SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
-        [ -f build-artifacts/deployment-report.json ] && SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
-        [ -f security-report/deployment-report.json ] && SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
-        [ -f api-test-results/deployment-report.json ] && SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
-        [ -f photography-check-results/deployment-report.json ] && SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
-        [ -f performance-report/deployment-report.json ] && SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+        ([ -f reports/deployment-report-18.x/deployment-report.json ] || [ -f reports/deployment-report-20.x/deployment-report.json ]) && SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+        [ -f reports/build-artifacts/deployment-report.json ] && SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+        [ -f reports/security-report/deployment-report.json ] && SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+        [ -f reports/api-test-results/deployment-report.json ] && SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+        [ -f reports/photography-check-results/deployment-report.json ] && SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+        [ -f reports/performance-report/deployment-report.json ] && SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
         
         if [ $SUCCESS_COUNT -eq $TOTAL_COUNT ]; then
           echo "🎉 **READY FOR DEPLOYMENT** - All checks passed ($SUCCESS_COUNT/$TOTAL_COUNT)" >> deployment-summary.md
