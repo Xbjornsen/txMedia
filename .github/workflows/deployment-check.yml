@@ -53,7 +53,8 @@ jobs:
         # For CI, we'll use a simple SQLite setup
         echo "DATABASE_URL=\"file:./test.db\"" > .env.test
         npx prisma generate
-        npx prisma db push --force-reset
+        # Skip database operations for pre-deployment check
+        echo "Skipping database push for pre-deployment check"
         
     - name: Run pre-deployment checks
       run: npm run deploy:check
@@ -96,7 +97,8 @@ jobs:
     - name: Setup database
       run: |
         npx prisma generate
-        npx prisma db push --force-reset
+        # Skip database push for non-API checks
+        echo "Skipping database push - using mock database"
         
     - name: Run build monitoring
       run: npm run deploy:check:build
@@ -139,7 +141,8 @@ jobs:
     - name: Setup database
       run: |
         npx prisma generate
-        npx prisma db push --force-reset
+        # Skip database push for non-API checks
+        echo "Skipping database push - using mock database"
         
     - name: Run security checks
       run: npm run deploy:check:security
@@ -160,6 +163,7 @@ jobs:
       postgres:
         image: postgres:15
         env:
+          POSTGRES_USER: postgres  
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: testdb
         options: >-
@@ -194,6 +198,8 @@ jobs:
     - name: Setup database
       run: |
         npx prisma generate
+        # Wait for PostgreSQL to be ready
+        sleep 10
         npx prisma db push --force-reset
         
     - name: Run API tests
@@ -235,7 +241,8 @@ jobs:
     - name: Setup database
       run: |
         npx prisma generate
-        npx prisma db push --force-reset
+        # Skip database push for non-API checks
+        echo "Skipping database push - using mock database"
         
     - name: Run photography app checks
       run: npm run deploy:check:photography
@@ -276,7 +283,8 @@ jobs:
     - name: Setup database
       run: |
         npx prisma generate
-        npx prisma db push --force-reset
+        # Skip database push for non-API checks
+        echo "Skipping database push - using mock database"
         
     - name: Build application
       run: npm run build
