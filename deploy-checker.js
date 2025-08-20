@@ -5,6 +5,11 @@ const path = require('path')
 const { execSync, spawn } = require('child_process')
 const crypto = require('crypto')
 
+// Load environment variables from .env file
+if (fs.existsSync('.env')) {
+  require('dotenv').config()
+}
+
 class DeploymentChecker {
   constructor() {
     this.results = {
@@ -474,8 +479,11 @@ class DeploymentChecker {
     const authConfig = this.readFile('src/pages/api/auth/[...nextauth].js')
     
     // Check for secure session configuration
-    if (!authConfig.includes('secret:')) {
+    // NextAuth automatically uses NEXTAUTH_SECRET env var if not explicitly set
+    if (!authConfig.includes('secret:') && !process.env.NEXTAUTH_SECRET) {
       this.log('error', 'NextAuth secret not configured')
+    } else if (process.env.NEXTAUTH_SECRET) {
+      this.log('info', 'NextAuth secret configured via environment variable')
     }
 
     if (!authConfig.includes('jwt:') && !authConfig.includes('session:')) {

@@ -5,6 +5,11 @@ const fs = require('fs')
 const path = require('path')
 const { execSync } = require('child_process')
 
+// Load environment variables from .env file
+if (fs.existsSync('.env')) {
+  require('dotenv').config()
+}
+
 class DeploymentUtils {
   constructor() {
     this.projectRoot = process.cwd()
