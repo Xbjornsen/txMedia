@@ -53,6 +53,9 @@ export default function AdminGalleryEdit() {
   const [isUploading, setIsUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null)
+  const [selectedImages, setSelectedImages] = useState<string[]>([])
+  const [isReordering, setIsReordering] = useState(false)
+  const [draggedImageId, setDraggedImageId] = useState<string | null>(null)
   const [error, setError] = useState('')
 
   const fetchGallery = useCallback(async () => {
@@ -187,12 +190,125 @@ export default function AdminGalleryEdit() {
 
       if (response.ok) {
         await fetchGallery()
+        setSelectedImages(prev => prev.filter(id => id !== imageId))
       } else {
         setError('Failed to delete image')
       }
     } catch (error) {
       console.error('Delete error:', error)
       setError('Failed to delete image')
+    }
+  }
+
+  const handleImageSelect = (imageId: string) => {
+    setSelectedImages(prev => {
+      if (prev.includes(imageId)) {
+        return prev.filter(id => id !== imageId)
+      } else {
+        return [...prev, imageId]
+      }
+    })
+  }
+
+  const handleSelectAll = () => {
+    if (selectedImages.length === gallery?.images.length) {
+      setSelectedImages([])
+    } else {
+      setSelectedImages(gallery?.images.map(img => img.id) || [])
+    }
+  }
+
+  const handleBulkOperation = async (operation: string) => {
+    if (selectedImages.length === 0) return
+
+    let confirmMessage = ''
+    switch (operation) {
+      case 'delete':
+        confirmMessage = `Delete ${selectedImages.length} selected images?`
+        break
+      case 'set_public':
+        confirmMessage = `Make ${selectedImages.length} images public?`
+        break
+      case 'set_private':
+        confirmMessage = `Make ${selectedImages.length} images private?`
+        break
+      default:
+        return
+    }
+
+    if (!confirm(confirmMessage)) return
+
+    try {
+      const response = await fetch(`/api/admin/gallery/${id}/bulk-operations`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          operation,
+          imageIds: selectedImages
+        })
+      })
+
+      if (response.ok) {
+        await fetchGallery()
+        setSelectedImages([])
+      } else {
+        setError(`Failed to ${operation} images`)
+      }
+    } catch (error) {
+      console.error('Bulk operation error:', error)
+      setError(`Failed to ${operation} images`)
+    }
+  }
+
+  const handleDragStart = (imageId: string) => {
+    setDraggedImageId(imageId)
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+  }
+
+  const handleDrop = async (e: React.DragEvent, targetImageId: string) => {
+    e.preventDefault()
+    
+    if (!draggedImageId || draggedImageId === targetImageId || !gallery) return
+
+    const images = [...gallery.images]
+    const draggedIndex = images.findIndex(img => img.id === draggedImageId)
+    const targetIndex = images.findIndex(img => img.id === targetImageId)
+
+    if (draggedIndex === -1 || targetIndex === -1) return
+
+    // Reorder images array
+    const [draggedImage] = images.splice(draggedIndex, 1)
+    images.splice(targetIndex, 0, draggedImage)
+
+    // Update order values
+    const imageOrders = images.map((img, index) => ({
+      imageId: img.id,
+      order: index
+    }))
+
+    setIsReordering(true)
+
+    try {
+      const response = await fetch(`/api/admin/gallery/${id}/reorder-images`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageOrders })
+      })
+
+      if (response.ok) {
+        await fetchGallery()
+      } else {
+        setError('Failed to reorder images')
+      }
+    } catch (error) {
+      console.error('Reorder error:', error)
+      setError('Failed to reorder images')
+    } finally {
+      setIsReordering(false)
+      setDraggedImageId(null)
     }
   }
 
@@ -247,6 +363,12 @@ export default function AdminGalleryEdit() {
                 </p>
               </div>
               <div className="flex items-center gap-4">
+                <Link
+                  href={`/admin/gallery/${id}/settings`}
+                  className="px-4 py-2 bg-[var(--accent)] text-[var(--background)] rounded-lg hover:bg-opacity-80 transition-colors"
+                >
+                  Gallery Settings
+                </Link>
                 <Link
                   href={`/gallery/${gallery?.slug}`}
                   target="_blank"
@@ -350,7 +472,49 @@ export default function AdminGalleryEdit() {
 
           {/* Images Grid */}
           <div className="bg-[var(--gradient-start)] rounded-xl border border-[var(--secondary)]/20 p-6">
-            <h2 className="text-xl font-semibold text-[var(--foreground)] mb-6">Gallery Images</h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-[var(--foreground)]">Gallery Images</h2>
+              
+              {/* Bulk Operations */}
+              {gallery?.images && gallery.images.length > 0 && (
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedImages.length === gallery.images.length}
+                      onChange={handleSelectAll}
+                      className="rounded border-[var(--secondary)]/20"
+                    />
+                    <span className="text-sm text-[var(--secondary)]">
+                      {selectedImages.length > 0 ? `${selectedImages.length} selected` : 'Select all'}
+                    </span>
+                  </div>
+                  
+                  {selectedImages.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleBulkOperation('delete')}
+                        className="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600 transition-colors"
+                      >
+                        Delete ({selectedImages.length})
+                      </button>
+                      <button
+                        onClick={() => handleBulkOperation('set_public')}
+                        className="px-3 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600 transition-colors"
+                      >
+                        Make Public
+                      </button>
+                      <button
+                        onClick={() => handleBulkOperation('set_private')}
+                        className="px-3 py-1 bg-gray-500 text-white rounded text-sm hover:bg-gray-600 transition-colors"
+                      >
+                        Make Private
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
             
             {!gallery?.images || gallery.images.length === 0 ? (
               <div className="text-center py-12">
@@ -358,34 +522,114 @@ export default function AdminGalleryEdit() {
                 <p className="text-sm text-[var(--secondary)]">Upload some images to get started</p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                {gallery.images.map((image) => (
-                  <div key={image.id} className="relative group">
-                    <div className="aspect-square bg-[var(--secondary)]/10 rounded-lg overflow-hidden">
-                      <Image
-                        src={image.thumbnailPath || image.filePath}
-                        alt={image.originalName}
-                        fill
-                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 16vw"
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                      <button
-                        onClick={() => deleteImage(image.id)}
-                        className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
-                    </div>
-                    <p className="text-xs text-[var(--secondary)] mt-2 truncate">
-                      {image.originalName}
-                    </p>
+              <>
+                {isReordering && (
+                  <div className="mb-4 p-3 bg-blue-100 border border-blue-300 rounded-lg">
+                    <p className="text-blue-700 text-sm">Reordering images...</p>
                   </div>
-                ))}
-              </div>
+                )}
+                
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                  {gallery.images
+                    .sort((a, b) => a.order - b.order)
+                    .map((image) => (
+                    <div 
+                      key={image.id} 
+                      className={`relative group cursor-move ${
+                        selectedImages.includes(image.id) ? 'ring-2 ring-[var(--accent)]' : ''
+                      } ${draggedImageId === image.id ? 'opacity-50' : ''}`}
+                      draggable={true}
+                      onDragStart={() => handleDragStart(image.id)}
+                      onDragOver={handleDragOver}
+                      onDrop={(e) => handleDrop(e, image.id)}
+                    >
+                      {/* Selection Checkbox */}
+                      <div className="absolute top-2 left-2 z-10">
+                        <input
+                          type="checkbox"
+                          checked={selectedImages.includes(image.id)}
+                          onChange={() => handleImageSelect(image.id)}
+                          onClick={(e) => e.stopPropagation()}
+                          className="w-4 h-4 rounded border-2 border-white bg-white/80 checked:bg-[var(--accent)] checked:border-[var(--accent)]"
+                        />
+                      </div>
+
+                      {/* Visibility Indicator */}
+                      <div className="absolute top-2 right-2 z-10">
+                        <span className={`inline-block w-3 h-3 rounded-full ${
+                          image.isPublic ? 'bg-green-500' : 'bg-gray-500'
+                        }`} title={image.isPublic ? 'Public' : 'Private'}></span>
+                      </div>
+
+                      <div className="aspect-square bg-[var(--secondary)]/10 rounded-lg overflow-hidden">
+                        <Image
+                          src={image.thumbnailPath || image.filePath}
+                          alt={image.originalName}
+                          fill
+                          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 16vw"
+                          className="object-cover"
+                        />
+                      </div>
+                      
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
+                        <button
+                          onClick={() => deleteImage(image.id)}
+                          className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                          title="Delete image"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={async () => {
+                            try {
+                              const response = await fetch(`/api/admin/gallery/${id}/bulk-operations`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                  operation: image.isPublic ? 'set_private' : 'set_public',
+                                  imageIds: [image.id]
+                                })
+                              })
+                              if (response.ok) {
+                                await fetchGallery()
+                              }
+                            } catch (error) {
+                              console.error('Toggle visibility error:', error)
+                            }
+                          }}
+                          className={`p-2 text-white rounded-lg transition-colors ${
+                            image.isPublic ? 'bg-gray-500 hover:bg-gray-600' : 'bg-green-500 hover:bg-green-600'
+                          }`}
+                          title={image.isPublic ? 'Make private' : 'Make public'}
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            {image.isPublic ? (
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                            ) : (
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            )}
+                          </svg>
+                        </button>
+                      </div>
+                      
+                      <p className="text-xs text-[var(--secondary)] mt-2 truncate">
+                        {image.originalName}
+                      </p>
+                      <p className="text-xs text-[var(--secondary)]/60">
+                        Order: {image.order}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="mt-4 p-3 bg-[var(--secondary)]/10 rounded-lg">
+                  <p className="text-sm text-[var(--secondary)]">
+                    💡 <strong>Tip:</strong> Drag images to reorder them. Use checkboxes for bulk operations.
+                  </p>
+                </div>
+              </>
             )}
           </div>
         </div>
