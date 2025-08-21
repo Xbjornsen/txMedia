@@ -1,0 +1,85 @@
+{
+  "rules": {
+    "typescript": {
+      "enabled": true,
+      "strictMode": true,
+      "requireReturnTypes": true
+    },
+    "security": {
+      "enabled": true,
+      "checkSqlInjection": true,
+      "checkXss": true,
+      "checkHardcodedSecrets": true,
+      "requireAuthentication": true
+    },
+    "react": {
+      "enabled": true,
+      "requireKeyProps": true,
+      "checkHookDependencies": true,
+      "suggestMemoization": true
+    },
+    "architecture": {
+      "enabled": true,
+      "enforcePrismaPattern": true,
+      "checkApiStructure": true,
+      "validateImports": true
+    },
+    "performance": {
+      "enabled": true,
+      "checkNextjsOptimizations": true,
+      "requireLoadingStates": true,
+      "checkAccessibility": true
+    },
+    "style": {
+      "enabled": true,
+      "checkTailwindPatterns": true,
+      "validateCssVars": true,
+      "enforceImportOrder": true
+    },
+    "photographyApp": {
+      "enabled": true,
+      "checkImageUpload": true,
+      "validateGalleryAuth": true,
+      "trackDownloads": true,
+      "validateFavorites": true
+    }
+  },
+  "severity": {
+    "typescript": "error",
+    "security": "error",
+    "react": "warning",
+    "architecture": "error",
+    "performance": "suggestion",
+    "style": "suggestion",
+    "photographyApp": "warning"
+  },
+  "exclude": [
+    "node_modules/**",
+    ".next/**",
+    "dist/**",
+    "build/**",
+    "coverage/**",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ],
+  "customPatterns": {
+    "txMediaSpecific": {
+      "gallerySlugValidation": "/^[a-z0-9-]+$/",
+      "imageFileTypes": ["jpg", "jpeg", "png", "webp"],
+      "maxImageSize": "10MB",
+      "requiredEnvVars": [
+        "DATABASE_URL",
+        "NEXTAUTH_SECRET",
+        "ADMIN_EMAIL",
+        "ADMIN_PASSWORD"
+      ]
+    }
+  },
+  "integrations": {
+    "eslint": true,
+    "typescript": true,
+    "prettier": false
+  }
+}

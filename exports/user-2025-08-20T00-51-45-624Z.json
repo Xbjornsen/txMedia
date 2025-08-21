@@ -1,0 +1,20 @@
+[
+  {
+    "id": "cmehu6kqc0000fke4y0bethdo",
+    "name": "Xavier Thorbjornsen",
+    "email": "xavier@txmedia.com",
+    "emailVerified": "2025-08-19T00:59:43.090Z",
+    "image": null,
+    "createdAt": "2025-08-19T00:59:43.092Z",
+    "updatedAt": "2025-08-19T00:59:43.092Z"
+  },
+  {
+    "id": "cmej8tm5q0000fk6oqqqtk6lj",
+    "name": "Test User",
+    "email": "test@txmedia.com",
+    "emailVerified": "2025-08-20T00:37:18.827Z",
+    "image": null,
+    "createdAt": "2025-08-20T00:37:18.830Z",
+    "updatedAt": "2025-08-20T00:37:18.830Z"
+  }
+]
