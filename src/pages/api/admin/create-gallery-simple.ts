@@ -50,9 +50,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10)
 
+    // Find or create admin user first
+    const adminEmail = process.env.ADMIN_EMAIL
+    let userId;
+    
+    const userResult = await client.query(`
+      SELECT id FROM "User" WHERE email = $1
+    `, [adminEmail])
+    
+    if (userResult.rows.length === 0) {
+      // Create admin user if doesn't exist
+      const createUserResult = await client.query(`
+        INSERT INTO "User" (id, name, email, "createdAt", "updatedAt") 
+        VALUES ($1, $2, $3, NOW(), NOW()) 
+        RETURNING id
+      `, [`admin-${Date.now()}`, 'Admin User', adminEmail])
+      userId = createUserResult.rows[0].id
+    } else {
+      userId = userResult.rows[0].id
+    }
+
     // Create gallery
     const galleryId = `gallery-${Date.now()}`
-    const userId = 'cmehu6kqc0000fke4y0bethdo' // Admin user ID
 
     const galleryResult = await client.query(`
       INSERT INTO "Gallery" (
