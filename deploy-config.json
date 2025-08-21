@@ -1,0 +1,177 @@
+{
+  "deploymentChecker": {
+    "version": "1.0.0",
+    "environments": {
+      "development": {
+        "skipChecks": ["production-test"],
+        "allowWarnings": true,
+        "requiredEnvironmentVars": [
+          "NEXTAUTH_SECRET",
+          "DATABASE_URL",
+          "ADMIN_EMAIL",
+          "ADMIN_PASSWORD"
+        ]
+      },
+      "staging": {
+        "skipChecks": [],
+        "allowWarnings": true,
+        "requiredEnvironmentVars": [
+          "NEXTAUTH_SECRET",
+          "NEXTAUTH_URL",
+          "DATABASE_URL",
+          "ADMIN_EMAIL",
+          "ADMIN_PASSWORD"
+        ]
+      },
+      "production": {
+        "skipChecks": [],
+        "allowWarnings": false,
+        "requiredEnvironmentVars": [
+          "NEXTAUTH_SECRET",
+          "NEXTAUTH_URL",
+          "DATABASE_URL",
+          "ADMIN_EMAIL",
+          "ADMIN_PASSWORD"
+        ],
+        "securityRequirements": {
+          "minSecurityScore": 80,
+          "requireHTTPS": true,
+          "requireSecurityHeaders": true
+        }
+      }
+    },
+    "checks": {
+      "preDeployment": {
+        "structure": {
+          "enabled": true,
+          "blocking": true
+        },
+        "environment": {
+          "enabled": true,
+          "blocking": true
+        },
+        "dependencies": {
+          "enabled": true,
+          "blocking": true
+        },
+        "typescript": {
+          "enabled": true,
+          "blocking": true
+        },
+        "linting": {
+          "enabled": true,
+          "blocking": false
+        }
+      },
+      "build": {
+        "compilation": {
+          "enabled": true,
+          "blocking": true
+        },
+        "bundleAnalysis": {
+          "enabled": true,
+          "blocking": false,
+          "maxBundleSize": "1MB",
+          "maxSingleBundleSize": "100KB"
+        }
+      },
+      "security": {
+        "secretScanning": {
+          "enabled": true,
+          "blocking": true
+        },
+        "vulnerabilityCheck": {
+          "enabled": true,
+          "blocking": true,
+          "allowedSeverities": ["low", "moderate"]
+        },
+        "configValidation": {
+          "enabled": true,
+          "blocking": false
+        }
+      },
+      "database": {
+        "connection": {
+          "enabled": true,
+          "blocking": true
+        },
+        "schema": {
+          "enabled": true,
+          "blocking": true
+        },
+        "migrations": {
+          "enabled": true,
+          "blocking": true
+        }
+      },
+      "api": {
+        "endpointTests": {
+          "enabled": true,
+          "blocking": false,
+          "timeout": 30000
+        },
+        "authentication": {
+          "enabled": true,
+          "blocking": true
+        }
+      },
+      "photography": {
+        "gallerySystem": {
+          "enabled": true,
+          "blocking": true
+        },
+        "imageUpload": {
+          "enabled": true,
+          "blocking": true
+        },
+        "downloadTracking": {
+          "enabled": true,
+          "blocking": true
+        }
+      },
+      "performance": {
+        "bundleSize": {
+          "enabled": true,
+          "blocking": false
+        },
+        "imageOptimization": {
+          "enabled": true,
+          "blocking": false,
+          "maxImageSize": "500KB"
+        },
+        "caching": {
+          "enabled": true,
+          "blocking": false
+        }
+      }
+    },
+    "notifications": {
+      "onFailure": {
+        "email": false,
+        "slack": false,
+        "webhook": false
+      },
+      "onSuccess": {
+        "email": false,
+        "slack": false,
+        "webhook": false
+      }
+    },
+    "rollback": {
+      "enabled": true,
+      "conditions": [
+        "critical_errors",
+        "security_violations",
+        "database_failures"
+      ],
+      "strategy": "immediate"
+    },
+    "reporting": {
+      "generateReports": true,
+      "reportFormat": "json",
+      "saveToFile": true,
+      "uploadToS3": false,
+      "retainReports": 30
+    }
+  }
+}

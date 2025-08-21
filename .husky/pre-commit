@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# TxMedia Pre-commit Deployment Checks
+echo "🔍 Running pre-commit deployment checks..."
+
+# Run basic deployment validation
+npm run deploy:check
+
+# Check the exit code
+if [ $? -ne 0 ]; then
+    echo ""
+    echo "🚫 Pre-commit deployment check failed!"
+    echo "❌ Commit blocked due to deployment issues"
+    echo ""
+    echo "📋 To resolve:"
+    echo "1. Review the deployment report: deployment-report.json"
+    echo "2. Fix any critical errors found"
+    echo "3. Run: npm run deploy:check to verify fixes"
+    echo "4. Retry your commit"
+    echo ""
+    echo "⚠️  To bypass this check (not recommended):"
+    echo "   git commit --no-verify"
+    exit 1
+fi
+
+echo "✅ Pre-commit deployment check passed!"
