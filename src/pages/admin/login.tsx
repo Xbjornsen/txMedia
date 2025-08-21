@@ -101,7 +101,7 @@ export default function AdminLogin() {
                 required
                 disabled={isLoading}
                 className="w-full px-3 py-3 bg-[var(--gradient-start)] border border-[var(--secondary)]/20 rounded-lg text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50"
-                placeholder="xavier@txmedia.com"
+                placeholder="Admin email address"
               />
             </div>
 

@@ -4,13 +4,14 @@ import { prisma } from './prisma'
 export async function createTestGallery() {
   const hashedPassword = await bcrypt.hash('demo123', 12)
   
-  // Create a test user first
+  // Create a test user first using environment variables
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com'
   const user = await prisma.user.upsert({
-    where: { email: 'xavier@txmedia.com' },
+    where: { email: adminEmail },
     update: {},
     create: {
-      name: 'Xavier Thorbjornsen',
-      email: 'xavier@txmedia.com'
+      name: 'Admin User',
+      email: adminEmail
     }
   })
 
@@ -73,7 +74,8 @@ export async function createTestGallery() {
   console.log(`Test gallery created:`)
   console.log(`Gallery ID: ${gallery.slug}`)
   console.log(`Password: demo123`)
-  console.log(`Access URL: http://localhost:3000/gallery/${gallery.slug}`)
+  const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000'
+  console.log(`Access URL: ${baseUrl}/gallery/${gallery.slug}`)
   
   return gallery
 }
