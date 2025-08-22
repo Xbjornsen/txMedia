@@ -38,3 +38,33 @@ This is a Next.js 15 photography portfolio website for Tx Media using the Pages 
 - TypeScript for type safety
 - Tailwind CSS 4 for styling
 - EmailJS for contact form handling
+
+## Agent Usage - MANDATORY
+
+**ALWAYS USE PROJECT AGENTS FIRST**
+
+Before any task, you must use the appropriate custom agents built for this project:
+
+### 🗄️ Database Tasks
+- `npm run db:analyze` - Analyze database relationships and schema
+- `npm run db:health` - Check database health and performance  
+- `npm run db:validate` - Validate data integrity
+- `npm run db:test-data` - Generate test data for development
+
+### 🔌 API Tasks  
+- `npm run api:analyze` - Analyze existing API patterns
+- `npm run api:validate` - Validate API endpoints
+- `npm run api:generate` - Generate new API endpoints
+
+### 🎨 Frontend Tasks
+- `npm run component:generate` - Generate React components
+- `npm run component:help` - Show component options
+
+### 📋 Task Investigation
+- **ALWAYS use Task tool with `general-purpose` agent** for:
+  - Complex research and planning
+  - Multi-step file searches  
+  - Understanding large codebases
+  - Investigation phases before implementation
+
+**NEVER work directly without using agents first.** Always start with agent investigation, then implement based on their findings.
