@@ -39,6 +39,21 @@ This is a Next.js 15 photography portfolio website for Tx Media using the Pages 
 - Tailwind CSS 4 for styling
 - EmailJS for contact form handling
 
+## Git Workflow - CRITICAL
+
+**NEVER PUSH DIRECTLY TO MAIN BRANCH**
+
+Always follow proper GitHub practices:
+
+1. **Create Feature Branch**: `git checkout -b feature/branch-name` 
+2. **Make Changes**: Work on the feature branch
+3. **Commit Changes**: Standard commit messages
+4. **Push Branch**: `git push -u origin feature/branch-name`
+5. **Create Pull Request**: Use GitHub UI or `gh pr create`
+6. **Review & Merge**: Only merge via PR after review
+
+**Main branch is protected** - all changes must go through pull requests.
+
 ## Agent Usage - MANDATORY
 
 **ALWAYS USE PROJECT AGENTS FIRST**
