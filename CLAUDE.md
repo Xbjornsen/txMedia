@@ -53,3 +53,40 @@ Always follow proper GitHub practices:
 6. **Review & Merge**: Only merge via PR after review
 
 **Main branch is protected** - all changes must go through pull requests.
+
+## Agent Usage - MANDATORY
+
+**ALWAYS USE PROJECT AGENTS FIRST**
+
+Before any task, you must use the appropriate custom agents built for this project:
+
+### 🗄️ Database Tasks - Use `database-management` agent
+- Database schema validation and integrity checks
+- Health monitoring and performance analysis
+- Backup creation and data export
+- Test data generation for development
+
+### 🔌 API Tasks - Use `api-generator` agent
+- Generate Next.js API endpoints with authentication patterns
+- Admin and gallery scope endpoints
+- CRUD operations and file handling
+
+### 🎨 Frontend Tasks - Use `component-generator` agent
+- Generate React components with TypeScript
+- Admin, gallery, and UI component categories
+- Design system integration with Tailwind CSS
+
+### 📸 Media Processing Tasks - Use `media-processing` agent
+- Image optimization and format conversion
+- Thumbnail generation and watermarking
+- Batch processing and storage migration
+- Media analysis and cleanup operations
+
+### 📋 Task Investigation
+- **ALWAYS use Task tool with `general-purpose` agent** for:
+  - Complex research and planning
+  - Multi-step file searches  
+  - Understanding large codebases
+  - Investigation phases before implementation
+
+**NEVER work directly without using agents first.** Always start with agent investigation, then implement based on their findings.
