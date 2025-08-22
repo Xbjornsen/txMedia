@@ -3,15 +3,20 @@ import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import Header from "./header";
 import Footer from "./footer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const isGalleryPage = router.pathname.startsWith('/gallery');
-  const isAdminPage = router.pathname.startsWith('/admin');
+  const [isMounted, setIsMounted] = useState(false);
+  
+  // Avoid hydration mismatch by checking pathname only after mount
+  const isGalleryPage = isMounted && router.pathname.startsWith('/gallery');
+  const isAdminPage = isMounted && router.pathname.startsWith('/admin');
 
   useEffect(() => {
+    setIsMounted(true);
+    
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
         .register('/sw.js')

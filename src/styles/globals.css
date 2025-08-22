@@ -56,6 +56,34 @@
   .section-container {
     @apply max-w-7xl mx-auto px-4 py-8;
   }
+  
+  /* Gallery specific utilities */
+  .gallery-card-hover {
+    @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-xl;
+  }
+  
+  .image-grid-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  .loading-shimmer {
+    @apply animate-pulse bg-gradient-to-r from-[var(--secondary)]/10 via-[var(--secondary)]/20 to-[var(--secondary)]/10;
+  }
+  
+  /* Text truncation utilities */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 
 /* Slideshow Styles */

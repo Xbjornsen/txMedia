@@ -1,13 +1,8 @@
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
@@ -71,6 +66,14 @@ export default function Header() {
           </li>
           <li>
             <Link
+              href="/galleries"
+              className="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+            >
+              Galleries
+            </Link>
+          </li>
+          <li>
+            <Link
               href="/packages"
               className="text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
             >
@@ -127,13 +130,13 @@ export default function Header() {
         </button>
       </nav>
       {/* Mobile Menu Dropdown */}
-      {isMounted && isMenuOpen && (
+      {isMenuOpen && (
         <ul className="md:hidden bg-[var(--background)] border-t border-[var(--secondary)]/20 absolute left-0 right-0 top-full z-50 shadow-md">
           <li>
             <Link
               href="/"
               onClick={() => setIsMenuOpen(false)}
-              className="block w-full py-3 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center"
+              className="w-full py-3 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center"
             >
               Home
             </Link>
@@ -142,16 +145,25 @@ export default function Header() {
             <Link
               href="/portfolio"
               onClick={() => setIsMenuOpen(false)}
-              className="block w-full py-3 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center"
+              className="w-full py-3 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center"
             >
               Portfolio
             </Link>
           </li>
           <li>
             <Link
+              href="/galleries"
+              onClick={() => setIsMenuOpen(false)}
+              className="w-full py-3 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center"
+            >
+              Galleries
+            </Link>
+          </li>
+          <li>
+            <Link
               href="/packages"
               onClick={() => setIsMenuOpen(false)}
-              className="block w-full py-3 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center"
+              className="w-full py-3 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center"
             >
               Packages
             </Link>
@@ -160,7 +172,7 @@ export default function Header() {
             <Link
               href="/about"
               onClick={() => setIsMenuOpen(false)}
-              className="block w-full py-3 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center"
+              className="w-full py-3 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center"
             >
               About
             </Link>
@@ -169,7 +181,7 @@ export default function Header() {
             <Link
               href="/contact"
               onClick={() => setIsMenuOpen(false)}
-              className="block w-full py-3 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center"
+              className="w-full py-3 px-4 text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--gradient-start)] transition-colors min-h-[44px] flex items-center"
             >
               Contact
             </Link>
