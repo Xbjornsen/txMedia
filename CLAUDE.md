@@ -45,20 +45,27 @@ This is a Next.js 15 photography portfolio website for Tx Media using the Pages 
 
 Before any task, you must use the appropriate custom agents built for this project:
 
-### 🗄️ Database Tasks
-- `npm run db:analyze` - Analyze database relationships and schema
-- `npm run db:health` - Check database health and performance  
-- `npm run db:validate` - Validate data integrity
-- `npm run db:test-data` - Generate test data for development
+### 🗄️ Database Tasks - Use `database-management` agent
+- Database schema validation and integrity checks
+- Health monitoring and performance analysis
+- Backup creation and data export
+- Test data generation for development
 
-### 🔌 API Tasks  
-- `npm run api:analyze` - Analyze existing API patterns
-- `npm run api:validate` - Validate API endpoints
-- `npm run api:generate` - Generate new API endpoints
+### 🔌 API Tasks - Use `api-generator` agent
+- Generate Next.js API endpoints with authentication patterns
+- Admin and gallery scope endpoints
+- CRUD operations and file handling
 
-### 🎨 Frontend Tasks
-- `npm run component:generate` - Generate React components
-- `npm run component:help` - Show component options
+### 🎨 Frontend Tasks - Use `component-generator` agent
+- Generate React components with TypeScript
+- Admin, gallery, and UI component categories
+- Design system integration with Tailwind CSS
+
+### 📸 Media Processing Tasks - Use `media-processing` agent
+- Image optimization and format conversion
+- Thumbnail generation and watermarking
+- Batch processing and storage migration
+- Media analysis and cleanup operations
 
 ### 📋 Task Investigation
 - **ALWAYS use Task tool with `general-purpose` agent** for:
