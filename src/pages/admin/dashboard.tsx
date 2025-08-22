@@ -24,6 +24,10 @@ export default function AdminDashboard() {
   const [adminSession, setAdminSession] = useState<any>(null)
   const [galleries, setGalleries] = useState<Gallery[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [selectedGalleries, setSelectedGalleries] = useState<string[]>([])
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [galleryToDelete, setGalleryToDelete] = useState<string | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
   const [stats, setStats] = useState({
     totalGalleries: 0,
     activeGalleries: 0,
@@ -86,6 +90,80 @@ export default function AdminDashboard() {
     } catch (error) {
       console.error('Failed to toggle gallery status:', error)
     }
+  }
+
+  const deleteGallery = async (galleryId: string) => {
+    setIsDeleting(true)
+    try {
+      const response = await fetch(`/api/admin/gallery/${galleryId}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        setGalleries(prev => prev.filter(gallery => gallery.id !== galleryId))
+        setShowDeleteModal(false)
+        setGalleryToDelete(null)
+        
+        // Update stats
+        setStats(prev => ({
+          ...prev,
+          totalGalleries: prev.totalGalleries - 1,
+          activeGalleries: prev.activeGalleries - (galleries.find(g => g.id === galleryId)?.isActive ? 1 : 0)
+        }))
+      } else {
+        console.error('Failed to delete gallery')
+      }
+    } catch (error) {
+      console.error('Failed to delete gallery:', error)
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  const bulkDeleteGalleries = async () => {
+    setIsDeleting(true)
+    try {
+      const deletePromises = selectedGalleries.map(galleryId =>
+        fetch(`/api/admin/gallery/${galleryId}`, { method: 'DELETE' })
+      )
+      
+      const results = await Promise.all(deletePromises)
+      const successfulDeletes = results.filter(result => result.ok).length
+      
+      if (successfulDeletes > 0) {
+        setGalleries(prev => prev.filter(gallery => !selectedGalleries.includes(gallery.id)))
+        setSelectedGalleries([])
+        
+        // Update stats
+        setStats(prev => ({
+          ...prev,
+          totalGalleries: prev.totalGalleries - successfulDeletes,
+          activeGalleries: prev.activeGalleries - selectedGalleries.filter(id => 
+            galleries.find(g => g.id === id)?.isActive
+          ).length
+        }))
+      }
+    } catch (error) {
+      console.error('Failed to bulk delete galleries:', error)
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  const toggleSelectGallery = (galleryId: string) => {
+    setSelectedGalleries(prev => 
+      prev.includes(galleryId)
+        ? prev.filter(id => id !== galleryId)
+        : [...prev, galleryId]
+    )
+  }
+
+  const selectAllGalleries = () => {
+    setSelectedGalleries(galleries.map(g => g.id))
+  }
+
+  const clearSelection = () => {
+    setSelectedGalleries([])
   }
 
   if (isLoading || !adminSession) {
@@ -165,7 +243,32 @@ export default function AdminDashboard() {
           {/* Galleries List */}
           <div className="bg-[var(--gradient-start)] rounded-xl border border-[var(--secondary)]/20 overflow-hidden">
             <div className="px-6 py-4 border-b border-[var(--secondary)]/20">
-              <h2 className="text-xl font-semibold text-[var(--foreground)]">Client Galleries</h2>
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-[var(--foreground)]">Client Galleries</h2>
+                
+                {selectedGalleries.length > 0 && (
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm text-[var(--secondary)]">
+                      {selectedGalleries.length} selected
+                    </span>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={clearSelection}
+                        className="px-3 py-1 text-sm bg-[var(--secondary)]/20 text-[var(--foreground)] rounded hover:bg-[var(--secondary)]/30 transition-colors"
+                      >
+                        Clear
+                      </button>
+                      <button
+                        onClick={() => setShowDeleteModal(true)}
+                        disabled={isDeleting}
+                        className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition-colors disabled:opacity-50"
+                      >
+                        {isDeleting ? 'Deleting...' : 'Delete Selected'}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             {galleries.length === 0 ? (
@@ -184,7 +287,15 @@ export default function AdminDashboard() {
                   <thead className="bg-[var(--secondary)]/10">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-[var(--secondary)] uppercase tracking-wider">
-                        Gallery
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={selectedGalleries.length === galleries.length && galleries.length > 0}
+                            onChange={(e) => e.target.checked ? selectAllGalleries() : clearSelection()}
+                            className="rounded border-[var(--secondary)] text-[var(--accent)] focus:ring-[var(--accent)]"
+                          />
+                          <span>Gallery</span>
+                        </div>
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-[var(--secondary)] uppercase tracking-wider">
                         Client
@@ -210,12 +321,20 @@ export default function AdminDashboard() {
                     {galleries.map((gallery) => (
                       <tr key={gallery.id} className="hover:bg-[var(--secondary)]/10">
                         <td className="px-6 py-4">
-                          <div>
-                            <div className="text-sm font-medium text-[var(--foreground)]">
-                              {gallery.title}
-                            </div>
-                            <div className="text-sm text-[var(--secondary)]">
-                              {gallery.slug}
+                          <div className="flex items-center gap-3">
+                            <input
+                              type="checkbox"
+                              checked={selectedGalleries.includes(gallery.id)}
+                              onChange={() => toggleSelectGallery(gallery.id)}
+                              className="rounded border-[var(--secondary)] text-[var(--accent)] focus:ring-[var(--accent)]"
+                            />
+                            <div>
+                              <div className="text-sm font-medium text-[var(--foreground)]">
+                                {gallery.title}
+                              </div>
+                              <div className="text-sm text-[var(--secondary)]">
+                                {gallery.slug}
+                              </div>
                             </div>
                           </div>
                         </td>
@@ -268,6 +387,15 @@ export default function AdminDashboard() {
                             >
                               View
                             </Link>
+                            <button
+                              onClick={() => {
+                                setGalleryToDelete(gallery.id)
+                                setShowDeleteModal(true)
+                              }}
+                              className="text-red-500 hover:text-red-700 transition-colors"
+                            >
+                              Delete
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -278,6 +406,44 @@ export default function AdminDashboard() {
             )}
           </div>
         </div>
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteModal && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+            <div className="bg-[var(--background)] rounded-xl max-w-md w-full p-6 border border-[var(--secondary)]/20">
+              <h3 className="text-lg font-semibold text-[var(--foreground)] mb-4">
+                {galleryToDelete ? 'Delete Gallery' : 'Delete Selected Galleries'}
+              </h3>
+              
+              <p className="text-[var(--secondary)] mb-6">
+                {galleryToDelete 
+                  ? 'Are you sure you want to delete this gallery? This action cannot be undone and will permanently remove all images and data associated with this gallery.'
+                  : `Are you sure you want to delete ${selectedGalleries.length} selected galleries? This action cannot be undone and will permanently remove all images and data associated with these galleries.`
+                }
+              </p>
+
+              <div className="flex items-center gap-3 justify-end">
+                <button
+                  onClick={() => {
+                    setShowDeleteModal(false)
+                    setGalleryToDelete(null)
+                  }}
+                  className="px-4 py-2 bg-[var(--secondary)]/20 text-[var(--foreground)] rounded-lg hover:bg-[var(--secondary)]/30 transition-colors"
+                  disabled={isDeleting}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={galleryToDelete ? () => deleteGallery(galleryToDelete) : bulkDeleteGalleries}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50"
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? 'Deleting...' : 'Delete'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   )
