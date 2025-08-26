@@ -130,8 +130,9 @@ export default function Header() {
         </button>
       </nav>
       {/* Mobile Menu Dropdown */}
-      {isMenuOpen && (
-        <ul className="md:hidden bg-[var(--background)] border-t border-[var(--secondary)]/20 absolute left-0 right-0 top-full z-50 shadow-md">
+      <ul className={`md:hidden bg-[var(--background)] border-t border-[var(--secondary)]/20 absolute left-0 right-0 top-full z-50 shadow-md transition-all duration-200 ${
+        isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+      }`}>
           <li>
             <Link
               href="/"
@@ -195,8 +196,7 @@ export default function Header() {
               Client Gallery Access
             </Link>
           </li>
-        </ul>
-      )}
+      </ul>
     </header>
   );
 }
