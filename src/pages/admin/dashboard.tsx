@@ -77,7 +77,7 @@ export default function AdminDashboard() {
 
   const toggleGalleryStatus = async (galleryId: string, isActive: boolean) => {
     try {
-      const response = await fetch(`/api/admin/galleries/${galleryId}`, {
+      const response = await fetch(`/api/admin/gallery/${galleryId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isActive: !isActive })
@@ -89,6 +89,9 @@ export default function AdminDashboard() {
             ? { ...gallery, isActive: !isActive }
             : gallery
         ))
+        console.log(`Gallery ${isActive ? 'disabled' : 'enabled'} successfully`)
+      } else {
+        console.error('Failed to toggle gallery status:', response.status)
       }
     } catch (error) {
       console.error('Failed to toggle gallery status:', error)
@@ -103,6 +106,7 @@ export default function AdminDashboard() {
       })
 
       if (response.ok) {
+        const deletedGallery = galleries.find(g => g.id === galleryId)
         setGalleries(prev => prev.filter(gallery => gallery.id !== galleryId))
         setShowDeleteModal(false)
         setGalleryToDelete(null)
@@ -111,10 +115,11 @@ export default function AdminDashboard() {
         setStats(prev => ({
           ...prev,
           totalGalleries: prev.totalGalleries - 1,
-          activeGalleries: prev.activeGalleries - (galleries.find(g => g.id === galleryId)?.isActive ? 1 : 0)
+          activeGalleries: prev.activeGalleries - (deletedGallery?.isActive ? 1 : 0)
         }))
+        console.log('Gallery deleted successfully')
       } else {
-        console.error('Failed to delete gallery')
+        console.error('Failed to delete gallery:', response.status)
       }
     } catch (error) {
       console.error('Failed to delete gallery:', error)
@@ -134,17 +139,21 @@ export default function AdminDashboard() {
       const successfulDeletes = results.filter(result => result.ok).length
       
       if (successfulDeletes > 0) {
+        const deletedActiveCount = selectedGalleries.filter(id => 
+          galleries.find(g => g.id === id)?.isActive
+        ).length
+        
         setGalleries(prev => prev.filter(gallery => !selectedGalleries.includes(gallery.id)))
         setSelectedGalleries([])
+        setShowDeleteModal(false)
         
         // Update stats
         setStats(prev => ({
           ...prev,
           totalGalleries: prev.totalGalleries - successfulDeletes,
-          activeGalleries: prev.activeGalleries - selectedGalleries.filter(id => 
-            galleries.find(g => g.id === id)?.isActive
-          ).length
+          activeGalleries: prev.activeGalleries - deletedActiveCount
         }))
+        console.log(`${successfulDeletes} galleries deleted successfully`)
       }
     } catch (error) {
       console.error('Failed to bulk delete galleries:', error)
@@ -384,7 +393,7 @@ export default function AdminDashboard() {
                               {gallery.isActive ? 'Disable' : 'Enable'}
                             </button>
                             <Link
-                              href={`/gallery/${gallery.slug}`}
+                              href={`/admin/gallery/${gallery.id}/preview`}
                               target="_blank"
                               className="text-[var(--secondary)] hover:text-[var(--foreground)] transition-colors"
                             >
