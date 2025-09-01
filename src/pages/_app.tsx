@@ -1,22 +1,19 @@
 import "@/styles/globals.css";
-import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
-import Header from "./header";
-import Footer from "./footer";
-import { useEffect, useState } from "react";
+import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
+import Footer from "./footer";
+import Header from "./header";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const [isMounted, setIsMounted] = useState(false);
   
-  // Avoid hydration mismatch by checking pathname only after mount
-  const isGalleryPage = isMounted && router.pathname.startsWith('/gallery');
-  const isAdminPage = isMounted && router.pathname.startsWith('/admin');
+  // Fix hydration mismatch by removing router.isReady check
+  const isGalleryPage = router.pathname.startsWith('/gallery');
+  const isAdminPage = router.pathname.startsWith('/admin');
 
   useEffect(() => {
-    setIsMounted(true);
-    
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
         .register('/sw.js')

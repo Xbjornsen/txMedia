@@ -20,6 +20,8 @@ export default function GalleryView() {
   const [gridColumns, setGridColumns] = useState<2 | 3 | 4 | 5>(4)
 
   const fetchGallery = useCallback(async () => {
+    if (!slug) return
+    
     try {
       const response = await fetch(`/api/gallery/${slug}`)
       if (!response.ok) {
@@ -169,7 +171,7 @@ export default function GalleryView() {
           <div className="max-w-7xl mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <Link href="/" className="text-xl font-bold text-[var(--accent)] mb-2 inline-block">
+                <Link href="/galleries" className="text-xl font-bold text-[var(--accent)] mb-2 inline-block">
                   Tx Media
                 </Link>
                 <h1 className="text-2xl font-bold text-[var(--foreground)]">{gallery.title}</h1>

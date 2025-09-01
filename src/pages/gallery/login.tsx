@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 export default function GalleryLogin() {
   const [gallerySlug, setGallerySlug] = useState('')
@@ -167,10 +167,10 @@ export default function GalleryLogin() {
 
           <div className="text-center pt-6 border-t border-[var(--secondary)]/20">
             <Link 
-              href="/" 
+              href="/galleries" 
               className="text-sm text-[var(--secondary)] hover:text-[var(--accent)] transition-colors"
             >
-              ← Back to Tx Media
+              ← Back to Galleries
             </Link>
           </div>
         </div>

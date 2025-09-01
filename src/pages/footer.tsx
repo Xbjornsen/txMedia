@@ -1,9 +1,17 @@
+import { useState, useEffect } from "react";
+
 export default function Footer() {
+  const [currentYear, setCurrentYear] = useState(2024);
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
+
   return (
     <footer className="bg-[var(--background)] border-t border-[var(--secondary)]/20 py-1 md:py-2">
       <div className="max-w-7xl mx-auto px-4 py-2 md:py-4 text-center text-[var(--secondary)] text-xs sm:text-sm md:text-base">
         <p>
-          © {new Date().getFullYear()} TX Media by Xavier Thorbjornsen. All
+          © {currentYear} TX Media by Xavier Thorbjornsen. All
           rights reserved.
         </p>
         <div className="mt-2 flex items-center justify-center gap-2 sm:gap-4 flex-wrap">
