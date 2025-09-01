@@ -35,6 +35,24 @@ export default function AdminDashboard() {
     totalDownloads: 0
   })
 
+  // Define fetch function outside useEffect
+  const fetchDashboardData = async () => {
+    try {
+      const response = await fetch('/api/admin/galleries-simple')
+      if (response.ok) {
+        const data = await response.json()
+        setGalleries(data.galleries)
+        setStats(data.stats)
+      } else {
+        console.error('Failed to fetch galleries:', response.status)
+      }
+    } catch (error) {
+      console.error('Failed to fetch dashboard data:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   useEffect(() => {
     // Check for admin session in sessionStorage
     if (typeof window === 'undefined') return
@@ -49,23 +67,8 @@ export default function AdminDashboard() {
       const session = JSON.parse(storedSession)
       setAdminSession(session)
       
-      // Fetch dashboard data inline
-      const fetchData = async () => {
-        try {
-          const response = await fetch('/api/admin/galleries-simple')
-          if (response.ok) {
-            const data = await response.json()
-            setGalleries(data.galleries)
-            setStats(data.stats)
-          }
-        } catch (error) {
-          console.error('Failed to fetch dashboard data:', error)
-        } finally {
-          setIsLoading(false)
-        }
-      }
-      
-      fetchData()
+      // Call the fetch function
+      fetchDashboardData()
     } catch (error) {
       console.error('Invalid admin session:', error)
       router.push('/admin/login')
