@@ -43,7 +43,7 @@ export default function AdminGalleryPreview() {
       // Transform admin gallery data to match Gallery interface
       const galleryData: Gallery = {
         ...data.gallery,
-        images: data.gallery.images.map((img: any) => ({
+        images: data.gallery.images.map((img: { id: string; fileName: string; originalName: string; filePath: string; thumbnailPath: string; fileSize: number; width: number; height: number; order: number; isPublic: boolean }) => ({
           ...img,
           isFavorite: false // Admin preview doesn't need favorites functionality
         })),
@@ -128,7 +128,7 @@ export default function AdminGalleryPreview() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-[var(--foreground)] mb-4">Gallery Not Found</h1>
           <p className="text-[var(--secondary)] mb-6">
-            The gallery you're looking for doesn't exist.
+            The gallery you&apos;re looking for doesn&apos;t exist.
           </p>
           <Link 
             href="/admin/dashboard"
